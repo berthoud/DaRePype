@@ -14,8 +14,8 @@ import validate  # to check input config file is correct
 import re # regexp
 import gc # garbage collect
 from astropy.io import fits # fits libary
-from dataparent import DataParent # Pipe Data Parent
-from __builtin__ import True
+from .dataparent import DataParent # Pipe Data Parent
+#from __builtin__ import True # Not needed after python 2.X???
 
 class DataFits(DataParent):
     """ Pipeline Data FITS Object
@@ -176,16 +176,16 @@ class DataFits(DataParent):
         # read fits header, checks for existing valid fits file
         try:
             hdus = fits.open(filename)
-        except IOError, error:
+        except IOError as error:
             # IOError: 2 No such file or directory (missing file)
             self.log.error('LoadHead: no such file or head read error, '
                            + filename)
             raise error
-        except IndexError, error:
+        except IndexError as error:
             # IndexError: list index out of range (invalid format for fits)
             self.log.error('LoadHead: '+filename+' is not a valid FITS file')
             raise error
-        except TypeError, error:
+        except TypeError as error:
             # TypeError: invalid filename (not a string)
             self.log.error('LoadHead: filename is invalid type')
             raise error
@@ -366,10 +366,10 @@ class DataFits(DataParent):
         # save the file (produce errors if not successful)
         try:
             hdulist.writeto(filename, output_verify='fix', clobber=True)
-        except TypeError, error:
+        except TypeError as error:
             self.log.error('Save: filename is invalid type')
             raise error
-        except IOError, error:
+        except IOError as error:
             self.log.error('Save: Failed to write fits file to '+filename)
             raise error
         self.log.debug('Save: wrote FITS file %s' % filename)
@@ -601,14 +601,14 @@ class DataFits(DataParent):
             # check keyword / get index
             try:
                 ind = self.imgnames.index(key.upper())
-            except ValueError, error:
+            except ValueError as error:
                 msg = 'invalid image name (%s) in images' % key
                 self.log.error('Adddata: ' + msg)
                 raise error
             # check data type / get shape
             try:
                 news = images[key].shape
-            except AttributeError, error:
+            except AttributeError as error:
                 msg = 'invalid image type for image %s' % key
                 self.log.error('Adddata: ' + msg)
                 raise error
@@ -627,12 +627,12 @@ class DataFits(DataParent):
         # check if table format is correct (by converting it)
         if len(tablerow) != len(self.table[0]) :
             self.log.error('AddData: table row has invalid length')
-            raise ValueError, 'table row has invalid length'
+            raise ValueError('table row has invalid length')
         try:
             tablerow=numpy.rec.array(tablerow,dtype=self.table.dtype)
-        except (ValueError,TypeError), error:
+        except (ValueError,TypeError) as error:
             self.log.error('AddData: table row has invalid element type')
-            raise ValueError, 'table row has invalid element type'
+            raise ValueError('table row has invalid element type')
         ### append data
         for key in images.keys():
             # get index
@@ -708,7 +708,7 @@ class DataFits(DataParent):
         # check for valid name
         try:
             ind = self.imgnames.index(imagename.upper())
-        except ValueError, error:
+        except ValueError as error:
             msg = 'invalid image name (%s)' % imagename
             self.log.error('Imageindex: '+msg)
             raise error
@@ -800,7 +800,7 @@ class DataFits(DataParent):
         # check for valid name
         try:
             ind = self.tabnames.index(tablename.upper())
-        except ValueError, error:
+        except ValueError as error:
             msg = 'invalid table name (%s)' % tablename
             self.log.error('Tableindex: '+msg)
             raise error
@@ -953,12 +953,12 @@ class DataFits(DataParent):
         # check if tablerow format is correct (by converting it)
         if len(tablerow) != len(table[0]) :
             self.log.error('TableAddRow: table row has invalid length')
-            raise ValueError, 'table row has invalid length'
+            raise ValueError('table row has invalid length')
         try:
             tablerow=numpy.rec.array(tablerow,dtype=table.dtype)
         except (ValueError,TypeError):
             self.log.error('TableAddRow: table row has invalid element type')
-            raise ValueError, 'table row has invalid element type'
+            raise ValueError('table row has invalid element type')
         # Add to table
         self.tabdata[tabind] = numpy.insert(table, len(table), tablerow)
         self.log.debug('TableAddRow: done')
@@ -1061,7 +1061,7 @@ class DataFits(DataParent):
         # check if rows has same format than table
         try:
             _newdtype = rows.dtype
-        except AttributeError, error:
+        except AttributeError as error:
             msg = 'input rows are incorrect data type'
             self.log.error('TableMergeRows: %s' % msg)
             raise error

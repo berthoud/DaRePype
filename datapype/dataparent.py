@@ -21,7 +21,7 @@ import configobj # config object library
 import validate  # to check input config file is correct
 import re # regexp
 import gc # garbage collect
-from __builtin__ import True
+#from __builtin__ import True # Not needed after python 2.X???
 from fileinput import filename
 
 class DataParent(object):
@@ -172,7 +172,7 @@ class DataParent(object):
                     #self.validateconfig() # taken out for now
                     # configuration validation couldn't keep up with
                     # new configuration parameters
-                except configobj.ConfigObjError, error:
+                except configobj.ConfigObjError as error:
                     msg = 'Error while loading configuration file'
                     self.log.error('SetConfig: ' + msg)
                     raise error
@@ -296,7 +296,7 @@ class DataParent(object):
             steppacks = self.config['general']['steppacks']
             if isinstance(steppacks,str): # ensure we have a list if only
                 steppacks = [steppacks]    # 1 item, steppacks is str
-        except KeyError, error:
+        except KeyError as error:
             self.log.error('Setup: Missing steppacks item in configuration')
             raise error
 
@@ -315,7 +315,7 @@ class DataParent(object):
                 self.log.debug('Pipe step %s found in %s' %
                               (objname,pack))
                 break
-            except ImportError,msg:
+            except ImportError as msg:
                 tmp = 'No module named %s' % objname.lower()
                 if str(msg).startswith(tmp): # module not present in directory
                     self.log.debug('Pipe object %s not found in %s' %
@@ -332,7 +332,7 @@ class DataParent(object):
         # Make an object instance
         try:
             retobj = stepmodule.__dict__[objname]()
-        except KeyError, error:
+        except KeyError as error:
             msg = 'Pipe object %s' % objname
             msg+= ' not found in module %s' % mod
             self.log.error('GetObject: %s' % msg)
@@ -351,7 +351,7 @@ class DataParent(object):
             dataobjects = self.config['data']['dataobjects']
             if isinstance(dataobjects,str): # ensure we have a list if only
                 dataobjects = [dataobjects]    # 1 item, steppacks is str
-        except KeyError, error:
+        except KeyError as error:
             self.log.error('Setup: Missing dataobjects item in configuration')
             raise error
         # Loop through dataobjects
