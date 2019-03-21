@@ -19,6 +19,7 @@ import logging # logging library
 import time # time library
 import configobj # config object library
 import validate  # to check input config file is correct
+import six # python 2 and 3 compatibility library
 import re # regexp
 import gc # garbage collect
 #from __builtin__ import True # Not needed after python 2.X???
@@ -160,7 +161,7 @@ class DataParent(object):
             self.config=config
             self.log.debug('SetConfig: skipping configuration file validation')
             retmsg='received ConfigObj'
-        elif isinstance(config,basestring):
+        elif isinstance(config,six.string_types):
             # if config is a string - check for file existence -> load it
             if os.path.isfile(config):
                 try:
