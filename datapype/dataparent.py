@@ -222,7 +222,7 @@ class DataParent(object):
             retmsg  = 'config list with %d files' % len(config)
         # Set environment variables from [envars]
         if not self.config is None:
-            if self.config.has_key('envars'):
+            if 'envars' in self.config:
                 for var in self.config['envars']:
                     os.environ[var] = str( self.config['envars'][var] )
         # Return
