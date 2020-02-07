@@ -310,15 +310,17 @@ class DataParent(object):
                 mod = '%s.%s' % (pack,objname.lower())
             self.log.debug('looking for %s' % mod)
             # import the module
-            try:
+            try: 
                 stepmodule = __import__(mod, globals(), locals(),
                                         [objname])
                 self.log.debug('Pipe step %s found in %s' %
                               (objname,pack))
                 break
-            except ImportError as msg:
-                tmp = 'No module named %s' % objname.lower()
-                if str(msg).startswith(tmp): # module not present in directory
+            except (ImportError, ModuleNotFoundError) as msg:
+                tmp = 'No module named %s' % objname.lower() # py2
+                tmp1 = 'No module named \'%s.%s' % (pack,objname.lower()) # py3
+                print('###',str(msg),tmp,tmp1)
+                if str(msg).startswith(tmp) or str(msg).startswith(tmp1): # module not present in directory
                     self.log.debug('Pipe object %s not found in %s' %
                                    (objname, pack))
                 else: # module tries to import a missing package

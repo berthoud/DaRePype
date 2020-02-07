@@ -365,7 +365,7 @@ class DataFits(DataParent):
         hdulist=fits.HDUList(hdul)
         # save the file (produce errors if not successful)
         try:
-            hdulist.writeto(filename, output_verify='fix', clobber=True)
+            hdulist.writeto(filename, output_verify='fix', overwrite=True)
         except TypeError as error:
             self.log.error('Save: filename is invalid type')
             raise error
