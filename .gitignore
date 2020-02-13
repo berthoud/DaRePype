@@ -103,3 +103,6 @@ ENV/
 # eclipse
 *.pydevproject
 .project
+
+# mac
+.DS_Store
