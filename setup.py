@@ -25,6 +25,8 @@ setup(
         python setup.py build sdist --format=gztar
     CHECK IT:
         tar tzf dist/*.tar.gz
-        /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/twine check dist/darepype-0.1.0.tar.gz
+        twine check dist/darepype-0.1.0.tar.gz
+    Upload it:
+        twine upload dist/*
 
 """
