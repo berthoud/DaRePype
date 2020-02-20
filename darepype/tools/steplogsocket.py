@@ -20,7 +20,7 @@ import socket # socket library
 import thread # thread library
 import time # time libary
 import logging # logging object library
-from drp.stepparent import StepParent
+from ..drp.stepparent import StepParent
 
 class StepLogSocket(StepParent):
     """ Pipeline LogSocket Object
