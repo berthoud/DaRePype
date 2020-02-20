@@ -8,8 +8,8 @@
 '''
 
 import logging # logging object library
-from drp.dataparent import DataParent # pipeline data object
-from drp.stepmiparent import StepMIParent # pipe step parent object
+from .dataparent import DataParent # pipeline data object
+from .stepmiparent import StepMIParent # pipe step parent object
 
 class StepMOParent(StepMIParent):
     """ Pipeline multiple data input and output parent object

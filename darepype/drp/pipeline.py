@@ -10,10 +10,10 @@ import logging # logging object library
 import traceback # error traceback library
 import argparse # Argument parsing library
 import configobj # Config Object library
-from drp.dataparent import DataParent # Pipeline Data object
-from drp.stepparent import StepParent # Step Parent
-from drp.stepmiparent import StepMIParent # Step Multiple Input Parent
-from drp.stepniparent import StepNIParent # Step No Input Parent
+from .dataparent import DataParent # Pipeline Data object
+from .stepparent import StepParent # Step Parent
+from .stepmiparent import StepMIParent # Step Multiple Input Parent
+from .stepniparent import StepNIParent # Step No Input Parent
 
 class PipeLine(object):
     """ HAWC Pipeline Object

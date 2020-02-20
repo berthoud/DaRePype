@@ -11,9 +11,9 @@
 
 import logging # logging object library
 from configobj import ConfigObj
-from drp.dataparent import DataParent #pipeline data object
-from drp.datafits import DataFits
-from drp.stepmoparent import StepMOParent # pipe step parent object
+from .dataparent import DataParent #pipeline data object
+from .datafits import DataFits
+from .stepmoparent import StepMOParent # pipe step parent object
 
 class StepNIParent(StepMOParent):
     """ Pipeline no data input and multiple data output parent object
