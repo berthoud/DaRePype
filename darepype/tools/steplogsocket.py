@@ -17,7 +17,7 @@
 
 import os # os library
 import socket # socket library
-import thread # thread library
+import _thread # thread library
 import time # time libary
 import logging # logging object library
 from ..drp.stepparent import StepParent
