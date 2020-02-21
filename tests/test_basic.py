@@ -26,6 +26,7 @@ from darepype.drp import pipeline
 dp = dataparent.DataParent()
 sp = stepparent.StepParent()
 pl = pipeline.PipeLine()
+print(dp.nothere)
 
 #### Final message
 print("That's all folks!")
