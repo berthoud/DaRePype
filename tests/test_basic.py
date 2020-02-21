@@ -26,3 +26,6 @@ from darepype.drp import pipeline
 dp = dataparent.DataParent()
 sp = stepparent.StepParent()
 pl = pipeline.PipeLine()
+
+#### Final message
+print("That's all folks!")
