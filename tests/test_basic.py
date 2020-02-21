@@ -6,7 +6,10 @@
     
     2DO:
     * Still add asserts in here!!
-    
+    * test_objectsmake: Update to unittest: make sure I can make every object
+    * test_openfile: open a test file (test fits)
+    * test_runpipe: (and make sure output file is available)
+    * test_piperun: run it on test file
 """
 
 #### Setup

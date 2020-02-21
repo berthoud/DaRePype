@@ -7,20 +7,17 @@ python:
   - '2.7'
   - '3.6'
   - '3.7'
+  - '3.8'
 
-before_install:
+install:
   - pip install pip setuptools --upgrade
   - pip install astropy
 
-install:
-  - python -m pip install .[doc]
-
-before_script:
-  - python -m pip install coveralls coverage codecov "pytest>=3.1" pytest-runner
 
 script:
   # run unit tests
-  - coverage run ./tests/test_basic.py
+  python -m unittest discover -s tests
+  # - coverage run ./tests/test_basic.py - old program with coverage
 
 after_success:
   - coveralls
