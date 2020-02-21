@@ -1,0 +1,31 @@
+language: python
+
+os:
+  - linux
+
+python:
+  - '3.5'
+  - '3.6'
+  - '3.7'
+  - '3.8'
+
+before_install:
+  - pip install pip setuptools --upgrade
+
+install:
+  - python -m pip install .[doc]
+
+before_script:
+  - python -m pip install coveralls coverage codecov "pytest>=3.1" pytest-runner
+
+script:
+  # run unit tests
+  - coverage run ./setup.py test
+
+after_success:
+  - coveralls
+  - codecov
+
+cache:
+  pip: true
+  apt: true
