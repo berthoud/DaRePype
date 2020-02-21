@@ -11,6 +11,7 @@ python:
 
 before_install:
   - pip install pip setuptools --upgrade
+  - pip install astropy
 
 install:
   - python -m pip install .[doc]
