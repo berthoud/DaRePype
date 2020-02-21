@@ -12,7 +12,7 @@ python:
 install:
   - pip install pip setuptools --upgrade
   - pip install astropy
-
+  - pip install configobj
 
 script:
   # run unit tests
