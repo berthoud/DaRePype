@@ -11,7 +11,7 @@ class TestDataParent(unittest.TestCase):
         """
         from darepype.drp import dataparent
         dp = dataparent.DataParent()
-        self.assertObjectIsClass(dp,dataparent.DataParent)
+        self.assertIsInstance(dp,dataparent.DataParent)
 
 class TestStepParent(unittest.TestCase):
     def test_init(self):
@@ -19,7 +19,7 @@ class TestStepParent(unittest.TestCase):
         """
         from darepype.drp import stepparent
         sp = stepparent.StepParent()
-        self.assertObjectIsClass(sp,stepparent.StepParent)
+        self.assertIsInstance(sp,stepparent.StepParent)
         
 class TestPipeLine(unittest.TestCase):
     def test_init(self):
@@ -27,4 +27,4 @@ class TestPipeLine(unittest.TestCase):
         """
         from darepype.drp import pipeline
         pl = pipeline.PipeLine()
-        self.assertObjectIsClass(pl,pipeline.PipeLine)
+        self.assertIsInstance(pl,pipeline.PipeLine)
