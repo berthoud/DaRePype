@@ -1,3 +1,5 @@
+# Travis file for darepype
+
 language: python
 
 os:
@@ -6,8 +8,8 @@ os:
 python:
   - '2.7'
   - '3.6'
-  #- '3.7'
-  #- '3.8'
+  - '3.7'
+  - '3.8'
 
 install:
   - pip install pip setuptools --upgrade
@@ -15,7 +17,7 @@ install:
   - pip install configobj
 
 script:
-  # run unit tests
+  # run unit tests - auto discover all test* in folder tests
   python -m unittest discover -s tests
   # - coverage run ./tests/test_basic.py - old program with coverage
 
@@ -26,3 +28,5 @@ after_success:
 cache:
   pip: true
   apt: true
+  
+# remember: results at https://travis-ci.org
