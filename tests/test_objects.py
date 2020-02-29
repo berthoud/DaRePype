@@ -13,7 +13,10 @@ class TestDataParent(unittest.TestCase):
         """
         from darepype.drp import dataparent
         dp = dataparent.DataParent()
-        self.assertIsInstance(dp,dataparent.DataParent)
+        self.assertIsInstance(dp, dataparent.DataParent)
+        from darepype.drp import DataParent
+        dp = DataParent()
+        self.assertIsInstance(dp, DataParent)
 
 class TestDataFits(unittest.TestCase):
     def test_init(self):
