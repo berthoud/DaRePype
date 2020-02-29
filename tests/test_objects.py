@@ -4,6 +4,8 @@
 """
 
 import unittest
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 class TestDataParent(unittest.TestCase):
     def test_init(self):
