@@ -1,0 +1,6 @@
+# DaRePype test configuration file
+
+# General Section: configuration of the pipeline
+[general]
+    # list of packages to look for pipe step modules (order matters)
+    steppakcs = darepype.drp

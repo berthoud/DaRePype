@@ -1,11 +1,14 @@
 """ Test_Objects
 
     Unittest for darepype objects. Creates an instance of every object.
+    Runs specific tests for each type of object.
 """
 
 import unittest
 import logging
 logging.basicConfig(level=logging.DEBUG)
+import os
+TESTDATA_FOLDER = os.path.join(os.path.dirname(__file__), 'testdata')
 
 class TestDataParent(unittest.TestCase):
     def test_init(self):
@@ -17,6 +20,14 @@ class TestDataParent(unittest.TestCase):
         from darepype.drp import DataParent
         dp = DataParent()
         self.assertIsInstance(dp, DataParent)
+        
+    def test_config(self):
+        """ Tests loading the configuration
+        """
+        from darepype.drp import DataParent
+        conf = os.path.join(TESTDATA_FOLDER,'testconf.txt')
+        dp = DataParent(config = conf)
+        self.assertIn('general', dp.config)
 
 class TestDataFits(unittest.TestCase):
     def test_init(self):
