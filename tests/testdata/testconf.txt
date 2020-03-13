@@ -3,4 +3,23 @@
 # General Section: configuration of the pipeline
 [general]
     # list of packages to look for pipe step modules (order matters)
-    steppakcs = darepype.drp
+    steppacks = darepype.drp
+    
+    
+# Data Section: information on data objects and filenames
+[data]
+    # Regexp for part of the filename before the file step identifier
+    # - default is '\A.+\.' for all filename before the last '.' including the '.'
+    filenamebegin = '\A.+\.'
+    # Regexp for part of the filename after the file step identifier
+    # - default is '\.[A-Za-z0-9]+\Z' for alphanum characters after last '.'
+    filenameend = '\.fits(\.gz)?\Z' # For fits files
+    # Regexp for part of the filename to be used as the file number
+    filenum = '(?:\A.*F\d{3,4}_((?:\d+-)?\d+)_.*\.fits(?:\.gz)?\Z)|(?:\AF\d{3,4}_HA.*_((?:\d+-)?\d+)\.fits(?:\.gz)?\Z)'
+    dataobjects = DataFits
+
+    
+#### PIPE STEPS ####
+
+[parentni]
+    filloutput = False

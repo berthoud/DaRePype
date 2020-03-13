@@ -12,7 +12,6 @@
 import logging # logging object library
 from configobj import ConfigObj
 from .dataparent import DataParent #pipeline data object
-from .datafits import DataFits
 from .stepmoparent import StepMOParent # pipe step parent object
 
 class StepNIParent(StepMOParent):
@@ -110,7 +109,7 @@ class StepNIParent(StepMOParent):
         # Return dataout
         if self.getarg('filloutput'):
             # Make a datafits object and put it into output
-            dout = DataFits(config = self.config)
+            dout = DataParent(config = self.config)
             dout.filename = 'StepNIOuput.fits'
             self.dataout = [dout]
         else:
