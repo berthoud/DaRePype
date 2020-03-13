@@ -19,7 +19,33 @@
     dataobjects = DataFits
 
     
+#### PIPE MODES ####
+# configuration for individual pipeline modes. Each needs:
+# - datakeys: List of keyword=values required in file header to select this pipeline mode
+#             Format is: Keyword=Value|Keyword=Value|Keyword=Value
+# - stepslist: List of pipesteps to run the data through
+
+# Pipemode for only one step, single input, single output
+[mode_single]
+    datakeys = "SIMPLE = True"
+	stepslist = load, StepParent, save
+    
+# Pipemode for only multi steps, MIMO and MISO
+[mode_multi]
+    datakeys = "SIMPLE = True"
+	stepslist = load, StepParent, StepMOParent, StepParent, StepMIParent, save
+    
 #### PIPE STEPS ####
 
+# Parent step configuration
+[parent]
+
+# Parent step Multiple Inputs configuration
+[parentmi]
+
+# Parent step Multiple Outputs configuration
+[parentmo]
+
+# Parent step No Inputs configuration
 [parentni]
-    filloutput = False
+

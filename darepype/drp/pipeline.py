@@ -209,8 +209,8 @@ class PipeLine(object):
                 try:
                     datakeys = self.config[section]['datakeys'].split('|')
                 except KeyError:
-                    self.log.warn("In configuration, missing datakeys for mode=%s"
-                                   % section)
+                    self.log.warning("In configuration, missing datakeys for mode=%s"
+                                     % section)
                     continue
                 datakeys = [dk.split('=') for dk in datakeys]
                 # Check all keywords in the file
@@ -228,7 +228,7 @@ class PipeLine(object):
                     return section[5:] # return mode name w/o 'mode_'
         # should only get here in no matching drp mode found
         msg = "GetPipeMode: No DRP mode found matching data = %s" % data.filename
-        self.log.warn(msg)
+        self.log.warning(msg)
         return ''
 
     def getsteps(self):
@@ -346,9 +346,9 @@ class PipeLine(object):
             filepipemode = self.getpipemode(data)
             if self.pipemode != filepipemode:
                 if force is True:
-                    self.log.warn('Call: File %s does not fit PipeMode datakeys  - Will attempt to process' %filename)
+                    self.log.warning('Call: File %s does not fit PipeMode datakeys  - Will attempt to process' %filename)
                 else:
-                    self.log.warn('Call: File %s does not fit PipeMode datakeys - skipping' %filename)
+                    self.log.warning('Call: File %s does not fit PipeMode datakeys - skipping' %filename)
                     self.openfiles.remove(filename)
                     continue
             # Add file to results
