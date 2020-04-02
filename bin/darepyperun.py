@@ -1,15 +1,15 @@
 #! /usr/bin/env python
 
-""" === Pipeline Run ===
+""" === DaRePype Run ===
 
     This tool facilitates setting up data reduction using the pipeline.
-    The tool requires one (or several) pipeline run description file which
-    specify input files, configuration and output location.
+    The tool requires one (or several) pipeline run description file(s)
+    which specify input files, configuration and output location.
     
     Usage:
-      piperun.py pipe_run_description_file.txt
+      darepyperun pipe_run_description_file.txt
     OR
-      piperun.py piperunfile1.txt piperunfile2.txt piperunfile3.txt  
+      darepyperun piperunfile1.txt piperunfile2.txt piperunfile3.txt  
     
     Pipe Run Description File:
     This file contains two sections: parameters and input file info.
@@ -39,8 +39,8 @@
       file called piperun.txt in the current folder.
     * If several pipeline description files are given, piperun will
       start each piperun with itself as a subprocess.
-    * This tool has no other arguments, just call pipeline.py directly
-      (use 'python pipeline.py -h' for details) to call the pipeline.
+    * This tool has no other arguments, just call darepyperun directly
+      (use 'python darepyperun -h' for details) to call the pipeline.
 """
 
 ### Basic Imports
@@ -103,8 +103,8 @@ if 'pythonpath' in rundict:
     sys.path.append(rundict['pythonpath'])
 
 ### Pipeline imports
-from drp.pipeline import PipeLine
-from drp.dataparent import DataParent
+from darepype.drp.pipeline import PipeLine
+from darepype.drp.dataparent import DataParent
 
 ### Go through config options: Logfile Loglevel Pipemode
 # Get outputfolder if available

@@ -1,0 +1,7 @@
+# Test DarePypeRun file
+# 
+# This is s darepyperun file for testing. The parameters
+# pythonpath, pipeconf, inputfiles, logfile and outputfolder
+# will be filled by the test.
+loglevel = DEBUG
+pipemode = single
