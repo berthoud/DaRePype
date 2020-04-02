@@ -77,7 +77,7 @@ if len(args.prdfile) > 1:
 
 ### Process run description (get pythonpath)
 # Read run description
-rundesc = [l.strip() for l in file(args.prdfile[0])]
+rundesc = [l.strip() for l in open(args.prdfile[0])]
 # Clear empty lines, strip comments, combine multi-line entries
 rundict = {}
 l1 = '' # full entry with several lines
