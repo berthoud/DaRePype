@@ -2,6 +2,8 @@
 """ PYPI setup file for darepype package
 """
 
+import glob
+import os
 from setuptools import setup
 
 # This call to setup() does all the work
@@ -15,6 +17,7 @@ setup(
     author="HAWC Team",
     author_email="marcberthoud@uchicago.edu",
     license="GNU GPL v3+",
+    scripts = glob.glob(os.path.join('bin','*')),
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
