@@ -9,10 +9,13 @@
 DarePype
 ########
 
+**Table of Contents**
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
    
+   index
+
 ************
 Introduction
 ************
