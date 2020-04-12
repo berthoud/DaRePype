@@ -5,9 +5,9 @@
    Run with 'make html' from doc folder may have to 
    export PATH=$PATH:/opt/local/Library/Frameworks/Python.framework/Versions/3.6/bin
 
-###################
-Welcome to DarePype
-###################
+########
+DarePype
+########
 
 .. toctree::
    :maxdepth: 2
@@ -36,16 +36,168 @@ The diagram above on the on the right illustrates the flow of data through a two
 ***************
 Getting Started
 ***************
-- prerequisites
-- installation
-- example where to get and run steps
+
+**Requirements:** You need the following to install and run DarePype:
+ - Python with configobj and astropy installed (those should install autimatically if you use pip). Depending on the pipe steps you're running additional packages might be required.
+ 
+ 
+**Installation:** Use PIP to install darepype.
+
+.. code-block:: bash
+
+    pip install --upgrade darepype
+
+**Getting Pipe Steps:** To see example pipesteps download the Stoneedge Pipeline on github at `github.com/yerkesobservatory/pipeline <https://github.com/yerkesobservatory/pipeline>`_.
  
 **************
 Using DarePype
 **************
 
+Configuration
+=============
+
+The pipeline will also not run without a valid configuration file. These configuration files are written in plain text and are divided into sections (specified by [brackets] ), each section contains keywords. A HAWC configuration file contains the following sections:
+ - General information such as the list of python packages to use for pipe steps.
+ - Information for each pipe mode, such as the sequence of pipe steps. The mode shown in the example below runs the steps LoadHAWC, Demod, Flat and NodBeams. The results from Demod, Flat and NodBeams are saved. The mode applies to files where the INSTCFG keyword is “POLARIZATION” and where the CMDFILE keyword is “ChopNod.txt”.
+ - A section for each pipe step. For example, the flat file pathname is specified in the flatfield step section. The step shown in the example below (flat) has two parameters: flatfile, a string, and datalist, a list of strings.
+ - Information about data handling such as instructions to substitute primary header keywords or combining multiple files.
+ 
+ Config file example:
+
+.. code-block:: ini
+
+    [mode_chop]
+        # list of steps
+        stepslist = StepLoadHAWC, StepDemod, save, StepFlat, save, StepNodBeams, save
+        # List of keyword=values required in file header to select this pipeline mode
+        #   Format is: Keyword=Value|Keyword=Value|Keyword=Value
+        datakeys = "INSTCFG = POLARIZATION|CMTFILE = ChopNod.txt"
+
+    [flat]
+        # filename for flat file
+        flatfile = flatfiles/hawc_flat.fits
+        # list of input file datasets to flatten
+        datalist = R array, T array
+
+Python based reduction
+======================
+
+Simple data reduction
+---------------------
+
+You can use the python interpreter to reduce a list of files you need to create a pipe object, assign a config file and run it with the file list. The necessary commands are:
+
+.. code-block:: python
+
+    from drp.pipeline import PipeLine # Import the pipeline object
+    pipe = PipeLine(config = 'path/file/name/of/pipeconfig.txt') # Create the pipe object and set configuration
+    result = pipe(['data1.raw.fits', 'data2.raw.fits']) # Run the pipeline
+    result.save('output_filename.fits') # Save the result
+
+To see log messages from the pipeline you might want to set up logging:
+
+.. code-block:: python
+
+    import logging # Import the logging library
+    logging.basicConfig(level = logging.INFO) # Configure logging to print messages of level info and higher
+    
+Step-by-step data reduction
+---------------------------
+
+To run individual pipeline steps you need to load the data into a pipedata object, then run the pipe step on it. Finally save the result. Assuming you have set the logging and the path the code would look like this:
+
+.. code-block:: python
+
+    # Import objects
+    from drp.pipedata import PipeData # Import pipedata object
+    from drp.stepmystep import StepMyStep # Import reduction step
+    # Make a pipedata object and load the data into it
+    inputdata = PipeData(config = 'path/file/name/of/pipeconfig.txt')
+    inputdata.load('path/file/name/of/input/data/file.fits')
+    # Make a pipe step object and run it on the data
+    mystep = StepMyStep()
+    outputdata = mystep(inputdata)
+    # Store the result
+    outputdata.save('path/file/name/of/output/data/file.fits')
+
+Command line based reduction
+============================
+
+The pipeline can be run from the (unix/windows) command line. For that the PYTHONPATH environment variable has to be set to access the darepype and step packages (see above). The pipeline can reduce multiple files and it uses the INSTMODE keyword to select the appropriate pipe steps and configure them. The pipeline is called as follows:
+
+.. code-block:: bash
+
+    python pipeline.py [-h] [-t] [--loglevel {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+                       [--logfile LOGFILE] [--pipemode PIPEMODE]
+                       [config] [inputfiles [inputfiles ...]]
+
+
+    Pipe Line
+    positional arguments:
+      config                pipeline configuration file (default = pipeconf.txt)
+      inputfiles            input files pathname
+    optional arguments:
+      -h, --help            show this help message and exit
+      -t, --test            runs the selftest of the pipeline
+      --loglevel {DEBUG,INFO,WARN,ERROR,CRITICAL}
+                            log level (default = INFO)
+      --logfile LOGFILE     logging file (default = none)
+      --pipemode PIPEMODE   pipeline mode (default = none)
+
+A pipeline configuration file is required to run the pipeline.
+
+It is also possible to run individual pipe steps directly from the command line:
+
+.. code-block:: bash
+
+    python stepfile.py [-h] [-t] [--loglevel {DEBUG,INFO,WARN,ERROR,CRITICAL}]
+                       [--logfile LOGFILE] [--config CONFIG]
+                       [--Pipe Step specific arguments]
+                       [inputfiles [inputfiles ...]]
+ 
+    Pipeline Step
+    Positional arguments:
+      inputfiles            input files pathname
+    Optional arguments:
+      -h, --help            show this help message and exit
+      -t, --test            runs the selftest of this pipe step
+      --loglevel={DEBUG,INFO,WARN,ERROR,CRITICAL}
+                            requested log level (default = INFO)
+      --logfile LOGFILE     log file pathname (default = none)
+      --config=pipeconf.txt pipeline configuration file pathname (default = none)
+      --Pipe Step specific arguments
+
+The Pipe Step specific arguments depend on the parameter requirements for the particular pipe step. They are the same parameters as are specified for that pipe step in the configuration file. The config file is optional, as the steps have default parameters.
+
+The following list of command illustrates the simplest way to fully reduce HAWC files:
+
+.. code-block:: bash
+
+    python pipeline.py pipeconf.txt file1.raw.fits file2.raw.fits
+
+This process only stores the final result, unless save steps are specified under stepslist in the configuration file.
+
+The following commands illustrate how to reduce the data using the pipe steps directly:
+
+.. code-block:: bash
+
+    python stepprepare.py file1.raw.fits file2.raw.fits
+    python stepdemod.py file1.pre.fits file2.pre.fits
+    python stepflat.py file1.dmd.fits file2.dmd.fits
+    python stepnodbeams.py file1.fla.fits file2.fla.fits
+    python stepnodmerge.py file1.bmc.fits file2.bmc.fits
+
+Each program saves the files that are used as input for the next step. StepNodMerge is a multi-input single-output (MISO) step so it will only write one file, file2.mrg.fits. Each of these single step programs can have additional command line arguments as described above.
+
+In real life several you might need several paths in your command so your command may look like this:
+
+.. code-block:: bash
+
+    python /home/myself/reduce/pipeline/src/drp/pipeline.py /home/myself/reduce/pipeline/config/pipeconf_myself.txt /home/myself/data/file1_RAW.fits /home/myself/data/file1_RAW.fits
+
+******************
 Indices and tables
-==================
+******************
 
 Please consult these pages for more details on using DaRePype:
 
