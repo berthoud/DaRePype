@@ -27,6 +27,7 @@ The object structure and a simple data processing sequence are shown in the figu
 
 .. image:: images/core_basic_all.png
    :alt: Pipeline architecture
+   :width: 600
    
 The diagram above on the left shows the object structure of the software: The flow of data through pipe steps is managed by the *Pipe Line* object. This object creates and calls *Pipe Step* objects, each responsible for a data reduction step. The sequence of pipe steps depends on the *Pipe Mode* which can either be set manually or is determined by matching input data header keywords. Data is stored and exchanged in *Pipe Data* objects, each containing data (images and/or tables) and header information. All pipeline components use a common *Configuration* object which contains description for all pipe modes, parameters for pipe steps and settings for pipe data behavior and pipeline operations. This object is loaded upon pipeline initialization. Messages are sent to common loggers by all pipeline objects. All log messages are usually sent to a log file but can be sent to standard output as well.
 

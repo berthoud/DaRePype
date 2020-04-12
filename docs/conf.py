@@ -24,6 +24,9 @@ author = 'HAWC Team'
 # The full version, including alpha/beta/rc tags
 release = '0.1.2'
 
+# Set master doc (else it looks for contents.rst)
+master_doc = 'index'
+
 
 # -- General configuration ---------------------------------------------------
 
