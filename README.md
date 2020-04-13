@@ -8,4 +8,4 @@ The core package for the framework is well developped and is used for the [HAWC 
 ## Badges
 [![Build Status](https://travis-ci.org/berthoud/darepype.svg?branch=master)](https://travis-ci.org/berthoud/darepype)
 
-[![Documentation Status[(https://readthedocs.org/projects/darepype/badge?version=latest)](https://darepype.readthedocs.io/en/latest/)
+[![Documentation Status](https://readthedocs.org/projects/darepype/badge?version=latest)](https://darepype.readthedocs.io/en/latest/)
