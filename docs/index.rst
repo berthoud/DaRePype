@@ -20,7 +20,7 @@ DarePype
 Introduction
 ************
 
-DarePype is a framework to build data reduction tasks. It helps organize and run parts as steps which can be run individually or as part of a larger pipeline. DarePype includes sample steps but other projects have steps which can be used. DarePype can be used by itself, as part of a batch job, interactively or to run individual pipeline steps. 
+DarePype is a framework to build data reduction pipelines. It helps organize and run pipeline parts as steps which can be run individually or as part of a larger pipeline. DarePype includes sample steps but other projects have steps which can be used. DarePype can be used by itself, as part of a batch job, interactively or to run individual pipeline steps. 
  
 *********************
 DarePype Architecture
@@ -48,7 +48,9 @@ Getting Started
 
 .. code-block:: bash
 
-    pip install --upgrade darepype
+    pip install darepype
+    
+If you are using **conda**, you might want to install the conda packages first before you install darepype and other packages with pip.
 
 **Getting Pipe Steps:** To see example pipesteps download the Stoneedge Pipeline on github at `github.com/yerkesobservatory/pipeline <https://github.com/yerkesobservatory/pipeline>`_.
  
@@ -59,19 +61,34 @@ Using DarePype
 Configuration
 =============
 
-The pipeline will also not run without a valid configuration file. These configuration files are written in plain text and are divided into sections (specified by [brackets] ), each section contains keywords. A HAWC configuration file contains the following sections:
- - General information such as the list of python packages to use for pipe steps.
- - Information for each pipe mode, such as the sequence of pipe steps. The mode shown in the example below runs the steps LoadHAWC, Demod, Flat and NodBeams. The results from Demod, Flat and NodBeams are saved. The mode applies to files where the INSTCFG keyword is “POLARIZATION” and where the CMDFILE keyword is “ChopNod.txt”.
- - A section for each pipe step. For example, the flat file pathname is specified in the flatfield step section. The step shown in the example below (flat) has two parameters: flatfile, a string, and datalist, a list of strings.
+The pipeline will also not run without a valid configuration file. These configuration files are written in plain text and are divided into sections (specified by [brackets] ), each section contains keywords. A DarePype configuration file contains the following sections:
+ - General information such as the list of python packages to use for pipe steps (steppacks).
+ - Data information such as which part of the filename indicates the file step identifier and which data objects to load.
+ - Information for each pipe mode, such as the sequence of pipe steps. The mode_chop shown in the example below runs the steps LoadHAWC, Demod, Flat and NodBeams. The results from Demod and NodBeams are saved. The mode applies to files where the INSTCFG keyword is “POLARIZATION” and where the CMDFILE keyword is “ChopNod.txt”.
+ - A section for each pipe step. In the example for StepFlat below, the step two parameters: flatfile, a string, and datalist, a list of strings.
  - Information about data handling such as instructions to substitute primary header keywords or combining multiple files.
  
  Config file example:
 
 .. code-block:: ini
 
+    [general]
+        # list of packages to look for pipe step modules (order matters)
+        steppacks = darepype.drp
+        
+    [data]
+        # Regexp for part of the filename before the file step identifier
+        # - default is '\A.+\.' for all filename before the last '.' including the '.'
+        filenamebegin = '\A.+\.'
+        # Regexp for part of the filename after the file step identifier
+        # - default is '\.[A-Za-z0-9]+\Z' for alphanum characters after last '.'
+        filenameend = '\.fits(\.gz)?\Z' # For fits files
+        # list of data objects to consider when loading data
+        dataobjects = DataFits
+
     [mode_chop]
         # list of steps
-        stepslist = StepLoadHAWC, StepDemod, save, StepFlat, save, StepNodBeams, save
+        stepslist = StepLoadHAWC, StepDemod, save, StepFlat, StepNodBeams, save
         # List of keyword=values required in file header to select this pipeline mode
         #   Format is: Keyword=Value|Keyword=Value|Keyword=Value
         datakeys = "INSTCFG = POLARIZATION|CMTFILE = ChopNod.txt"
@@ -92,7 +109,7 @@ You can use the python interpreter to reduce a list of files you need to create 
 
 .. code-block:: python
 
-    from drp.pipeline import PipeLine # Import the pipeline object
+    from darepype.drp import PipeLine # Import the pipeline object
     pipe = PipeLine(config = 'path/file/name/of/pipeconfig.txt') # Create the pipe object and set configuration
     result = pipe(['data1.raw.fits', 'data2.raw.fits']) # Run the pipeline
     result.save('output_filename.fits') # Save the result
@@ -112,11 +129,13 @@ To run individual pipeline steps you need to load the data into a pipedata objec
 .. code-block:: python
 
     # Import objects
-    from drp.pipedata import PipeData # Import pipedata object
-    from drp.stepmystep import StepMyStep # Import reduction step
-    # Make a pipedata object and load the data into it
-    inputdata = PipeData(config = 'path/file/name/of/pipeconfig.txt')
-    inputdata.load('path/file/name/of/input/data/file.fits')
+    from darepype.drp import DataParent # Import pipedata object
+    from mysteplib.stepmystep import StepMyStep # Import reduction step
+    # Make a data object
+    inputdata = DataParent(config = 'path/file/name/of/pipeconfig.txt')
+    # Load the data with the parent object, the result is a data child object
+    # of type given by the file format.
+    inputdata = inputdata.load('path/file/name/of/input/data/file.fits')
     # Make a pipe step object and run it on the data
     mystep = StepMyStep()
     outputdata = mystep(inputdata)
@@ -126,7 +145,7 @@ To run individual pipeline steps you need to load the data into a pipedata objec
 Command line based reduction
 ============================
 
-The pipeline can be run from the (unix/windows) command line. For that the PYTHONPATH environment variable has to be set to access the darepype and step packages (see above). The pipeline can reduce multiple files and it uses the INSTMODE keyword to select the appropriate pipe steps and configure them. The pipeline is called as follows:
+The pipeline can be run from the (unix/windows) command line. For that the PYTHONPATH environment variable has to be set to access the darepype and step packages (see above). The pipeline can reduce multiple files and it uses the keywords from the file header to select the appropriate pipe mode and configuration. The pipeline is called as follows:
 
 .. code-block:: bash
 

@@ -9,7 +9,7 @@ from setuptools import setup
 # This call to setup() does all the work
 setup(
     name="darepype",
-    version="0.1.1",
+    version="0.1.2",
     description="DAta REduction PYPEline framework",
     long_description = open("README.md",'rb').read().decode().strip(),
     long_description_content_type="text/markdown",
@@ -27,11 +27,17 @@ setup(
     install_requires=["configobj"]
 )
 
-""" Run / Install with:
+""" New Push to PIPY
+
+    Updates
+    - Make new tag and push to github.
+    - Update version above
+    Run / Install with:
         python setup.py build sdist --format=gztar
     CHECK IT:
-        tar tzf dist/*.tar.gz
+        tar -tzf dist/*.tar.gz
         twine check dist/darepype-0.1.0.tar.gz
+        BTW: /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/twine
     Upload it:
         twine upload dist/*
 
