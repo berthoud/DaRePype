@@ -52,6 +52,8 @@ Getting Started
     
 If you are using **conda**, you might want to install the conda packages first before you install darepype and other packages with pip.
 
+You can also fork the project from github at `github.com/berthoud/darepype <https://github.com/berthoud/darepype>`_.
+
 **Getting Pipe Steps:** To see example pipesteps download the Stoneedge Pipeline on github at `github.com/yerkesobservatory/pipeline <https://github.com/yerkesobservatory/pipeline>`_.
  
 **************
