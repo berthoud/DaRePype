@@ -98,4 +98,12 @@ class TestPipeLine(unittest.TestCase):
         do = pipe([FITSFILE,FITSFILE],dp.config,pipemode='multi', force=True)
         dp.log.info('  ==== END MISO/MIMO PIPE ====')
         self.assertIsInstance(do, DataParent)
+        
+    def test_noconfig(self):
+        """ Test pipeline with no config file
+        """
+        from darepype.drp import PipeLine
+        pipe = PipeLine()
+        pipe.addfiles(FITSFILE)
+        self.assertRaises(RuntimeError,pipe)
 
