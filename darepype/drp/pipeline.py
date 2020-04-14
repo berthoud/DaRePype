@@ -116,6 +116,11 @@ class PipeLine(object):
             headdata = None
             retmsg='no FITS files given'
         else:
+            # Raise error if no config defined
+            if not self.config:
+                msg = 'Missing Configuration - Aborting'
+                self.log.error(msg)
+                raise RuntimeError(msg)
             # try to get the length of filenames[0]
             try:
                 namelen=len(filenames[0])

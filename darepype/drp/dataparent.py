@@ -316,7 +316,7 @@ class DataParent(object):
                 self.log.debug('Pipe step %s found in %s' %
                               (objname,pack))
                 break
-            except (ImportError, ModuleNotFoundError) as msg:
+            except ImportError as msg:
                 tmp = 'No module named %s' % objname.lower() # py2
                 tmp1 = 'No module named \'%s.%s' % (pack,objname.lower()) # py3
                 print('###',str(msg),tmp,tmp1)
