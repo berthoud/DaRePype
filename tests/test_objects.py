@@ -34,13 +34,13 @@ class TestDataFits(unittest.TestCase):
         """ Test make an object
         """
         from darepype.drp import datafits
-        dp = datafits.DataFits()
-        self.assertIsInstance(dp,datafits.DataFits)
+        df = datafits.DataFits()
+        self.assertIsInstance(df,datafits.DataFits)
         
     def test_load(self):
         """ Test to load a fits file.
             Also tests if DataParent.load correctly finds
-            data objec for file
+            data object for file
         """
         from darepype.drp import DataParent
         from darepype.drp import DataFits
@@ -48,6 +48,26 @@ class TestDataFits(unittest.TestCase):
         df = dp.load(os.path.join(TESTDATA_FOLDER, 'testfit.fits'))
         self.assertIsInstance(df, DataFits)
         self.assertGreater(sum(df.image.shape), 0)
+        
+class TestDataText(unittest.TestCase):
+    def test_init(self):
+        """ Test make an object
+        """
+        from darepype.drp import datatext
+        dt = datatext.DataText()
+        self.assertIsInstance(dt, datatext.DataText)
+        
+    def test_load(self):
+        """ Test to laod a text file.
+            Also tests if DataParent.load correctly finds
+            data object for file
+        """
+        from darepype.drp import DataParent
+        from darepype.drp import DataText
+        dp = DataParent(config = os.path.join(TESTDATA_FOLDER, 'testconf.txt'))
+        dt = dp.load(os.path.join(TESTDATA_FOLDER, 'testtext.txt'))
+        self.assertIsInstance(dt, DataText)
+        self.assertGreater(len(dt.data), 0)
 
 class TestStepParent(unittest.TestCase):
     def test_init(self):

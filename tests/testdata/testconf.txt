@@ -16,7 +16,7 @@
     filenameend = '\.fits(\.gz)?\Z' # For fits files
     # Regexp for part of the filename to be used as the file number
     filenum = '(?:\A.*F\d{3,4}_((?:\d+-)?\d+)_.*\.fits(?:\.gz)?\Z)|(?:\AF\d{3,4}_HA.*_((?:\d+-)?\d+)\.fits(?:\.gz)?\Z)'
-    dataobjects = DataFits
+    dataobjects = DataFits, DataText
 
     
 #### PIPE MODES ####
