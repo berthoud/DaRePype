@@ -534,7 +534,7 @@ class DataFits(DataParent):
                 elif operation == 'DEFAULT':
                     if type(selfval) is str:
                         selfval = 'UNKNOWN'
-                    elif type(selfval) is int or type(selfval) is long:
+                    elif type(selfval) is int:
                         selfval = -9999
                     elif type(selfval) is float:
                         selfval = -9999.0
@@ -574,9 +574,9 @@ class DataFits(DataParent):
                     head2[k] = (head1[k],head1.comments[k])
             else:
                 head2[k] = (head1[k],head1.comments[k])
-        for i in xrange(nhist):
+        for i in range(nhist):
             head2.add_history(head1['history'][i])
-        for i in xrange(ncomm):
+        for i in range(ncomm):
             head2.add_comment(head1['comment'][i])
         self.log.debug("Copydata: done")
 
@@ -1138,17 +1138,17 @@ class DataFits(DataParent):
         units   = tables[0].columns.units
         # loop through all tables, make sure names, formats, dims, and units
         # are the same among them.
-        for i in xrange(1,ntable):
-            if cmp(names,tables[i].names): # equals zero if identical
+        for i in range(1,ntable):
+            if names != tables[i].names: # equals zero if identical
                 self.log.error('column names differ for merging')
                 raise ValueError
-            if cmp(formats,tables[i].columns.formats): # equals zero if identical
+            if formats != tables[i].columns.formats: # equals zero if identical
                 self.log.error('column formats differ for merging')
                 raise ValueError
-            if cmp(dims,tables[i].columns.dims): # equals zero if identical
+            if dims != tables[i].columns.dims: # equals zero if identical
                 self.log.error('column names differ for merging')
                 raise ValueError
-            if cmp(units,tables[i].columns.units): # equals zero if identical
+            if units != tables[i].columns.units: # equals zero if identical
                 self.log.error('column names differ for merging')
                 raise ValueError
 

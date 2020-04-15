@@ -319,11 +319,14 @@ class DataParent(object):
             except ImportError as msg:
                 tmp = 'No module named %s' % objname.lower() # py2
                 tmp1 = 'No module named \'%s.%s' % (pack,objname.lower()) # py3
-                print('###',str(msg),tmp,tmp1)
-                if str(msg).startswith(tmp) or str(msg).startswith(tmp1): # module not present in directory
+                tmp2 = 'No module named %s.%s' % (pack,objname.lower()) # py2 missing module
+                msgs = str(msg)
+                #print('###',msgs,tmp,tmp1)
+                if msgs.startswith(tmp) or msgs.startswith(tmp1) or msgs.startswith(tmp2): # module not present in directory
                     self.log.debug('Pipe object %s not found in %s' %
                                    (objname, pack))
                 else: # module tries to import a missing package
+                    self.log.debug('ImportError but Error message does not match')
                     raise
             except:   # print out import errors not due to missing
                 raise # modules (e.g., typos in code)
@@ -530,7 +533,7 @@ class DataParent(object):
                 elif operation == 'DEFAULT':
                     if type(selfval) is str:
                         selfval = 'UNKNOWN'
-                    elif type(selfval) is int or type(selfval) is long:
+                    elif type(selfval) is int:
                         selfval = -9999
                     elif type(selfval) is float:
                         selfval = -9999.0
