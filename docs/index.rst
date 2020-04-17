@@ -76,7 +76,7 @@ The pipeline will also not run without a valid configuration file. These configu
 
     [general]
         # list of packages to look for pipe step modules (order matters)
-        steppacks = darepype.drp
+        steppacks = darepype.drp, darepype.utils, mystepspackage
         
     [data]
         # Regexp for part of the filename before the file step identifier
