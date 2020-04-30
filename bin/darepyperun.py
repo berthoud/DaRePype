@@ -54,7 +54,7 @@ import argparse
 ### Read run description
 # Get file from arguments
 parser = argparse.ArgumentParser(description = "Pipe Run")
-parser.add_argument('prdfile', default='piperun.txt', type=str, nargs = '*',
+parser.add_argument('prdfile', default=['piperun.txt'], type=str, nargs = '*',
                     help = 'pipe run description file name (default = piperun.txt)')
 args = parser.parse_args()
 
@@ -76,6 +76,10 @@ if len(args.prdfile) > 1:
     exit()
 
 ### Process run description (get pythonpath)
+# Check if file exists else return error
+if not os.path.exists(args.prdfile[0]):
+    print('ERROR: invalid or not existant piperun file <%s>' % args.prdfile[0])
+    exit(1)
 # Read run description
 rundesc = [l.strip() for l in open(args.prdfile[0])]
 # Clear empty lines, strip comments, combine multi-line entries
