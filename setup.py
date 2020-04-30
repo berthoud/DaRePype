@@ -22,7 +22,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
-    packages=["darepype","darepype.drp","darepype.tools"],
+    packages=["darepype","darepype.drp","darepype.tools","darepype.utils"],
     include_package_data=True,
     install_requires=["configobj"]
 )
