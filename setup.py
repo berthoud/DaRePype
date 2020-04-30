@@ -9,7 +9,7 @@ from setuptools import setup
 # This call to setup() does all the work
 setup(
     name="darepype",
-    version="0.1.3",
+    version="0.1.4",
     description="DAta REduction PYPEline framework",
     long_description = open("README.md",'rb').read().decode().strip(),
     long_description_content_type="text/markdown",
@@ -22,7 +22,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
-    packages=["darepype","darepype.drp","darepype.tools"],
+    packages=["darepype","darepype.drp","darepype.tools","darepype.utils"],
     include_package_data=True,
     install_requires=["configobj"]
 )
