@@ -9,7 +9,7 @@ from setuptools import setup
 # This call to setup() does all the work
 setup(
     name="darepype",
-    version="0.1.2",
+    version="0.1.4",
     description="DAta REduction PYPEline framework",
     long_description = open("README.md",'rb').read().decode().strip(),
     long_description_content_type="text/markdown",

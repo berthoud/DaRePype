@@ -10,8 +10,6 @@ import os # os library
 import logging # logging library
 import time # time library
 import configobj # config object library
-import validate  # to check input config file is correct
-import re # regexp
 import gc # garbage collect
 from astropy.io import fits # fits libary
 from .dataparent import DataParent # Pipe Data Parent
