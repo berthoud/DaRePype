@@ -363,6 +363,7 @@ class PipeLine(object):
         # Remove the files from openfiles
         self.openfiles = []
         ### Loop over steps:
+        # Make sure data is available or first step is No Input
         if len(self.results) == 0 and not isinstance(self.steps[0], StepNIParent):
             self.log.error('Call: Zero files to process - quitting')
             stepi = len(self.steps)
@@ -370,12 +371,12 @@ class PipeLine(object):
             stepi = 0
         while stepi < len(self.steps):
             # Get stepstart and stepend i.e. range of next SISO steps
-            # Point stepend to first MI step after stepstart or last step
-            stepstart = stepi
+            # Point stepend to first Multi Input step after stepstart or last step
+            #   Comment: NI steps are children of MI so that works for them too
+            stepstart = stepend = stepi
             nextMI = False # flag indicating next step is MI
-            stepend = stepi
             while not nextMI and stepend < len(self.steps) :
-                if isinstance(self.steps[stepend], StepMIParent):
+                if isinstance(self.steps[stepend], StepMIParent) :
                     nextMI = True
                 else:
                     stepend += 1
@@ -489,7 +490,6 @@ class PipeLine(object):
                     traceback.print_exc()
                     # raise error
                     raise(error)
-                #self.steps[stepi].reset()
                 self.steps[stepi].datain = None
                 self.steps[stepi].dataout = None
                 # store results in outputs[stepi] and results
@@ -499,6 +499,15 @@ class PipeLine(object):
                     self.results = data
                 else:
                     self.results = [data]
+                # If the step is an NI, update reducedfiles
+                if isinstance(self.steps[stepi], StepNIParent):
+                    for dat in data:
+                        inlist = False
+                        for fnam in self.reducedfiles:
+                            if dat.filenamebegin in fnam and dat.filenameend in fnam:
+                                inlist = True
+                        if not inlist:
+                            self.reducedfiles.append(dat.filename)
                 # increase step index
                 stepi += 1
         # -- end loop over all steps
