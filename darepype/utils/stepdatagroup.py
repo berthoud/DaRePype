@@ -14,8 +14,8 @@
 """
 
 import logging # logging object library
-from drp.dataparent import DataParent
-from drp.stepmoparent import StepMOParent
+from darepype.drp import DataParent
+from darepype.drp import StepMOParent
 
 class StepDataGroup(StepMOParent):
     """ HAWC Pipeline Step Parent Object

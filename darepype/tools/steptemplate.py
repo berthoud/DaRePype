@@ -25,7 +25,9 @@ class StepMyStep(StepParent):
     
     def setup(self):
         """ ### Names and Parameters need to be Set Here ###
+
             Sets the internal names for the function and for saved files.
+
             Defines the input parameters for the current pipe step.
             Setup() is called at the end of __init__
             The parameters are stored in a list containing the following
@@ -39,10 +41,9 @@ class StepMyStep(StepParent):
             - help: A short description of the parameter.
         """
         ### Set Names
-        # Name of the pipeline reduction step
-        self.name='MyStep'
-        # Shortcut for pipeline reduction step and identifier for
-        # saved file names.
+        # Name of the pipeline reduction step (same case as config file)
+        self.name='mystep'
+        # Identifier for saved file names.
         self.procname = 'MYS'
         # Set Logger for this pipe step
         self.log = logging.getLogger('pipe.step.%s' % self.name)

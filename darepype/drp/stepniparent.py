@@ -59,7 +59,7 @@ class StepNIParent(StepMOParent):
         self.paramlist = []
         # Append parameters
         self.paramlist.append(['filloutput', False,
-            'If TRUE the step will return one pipedata object - else an empty list is returned (default)'])
+            'If TRUE the step will return one dataparent object - else an empty list is returned (default)'])
         
     def __call__(self,datain=None, **arglist):
         """ Object Call: returns reduced input data

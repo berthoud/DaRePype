@@ -29,4 +29,6 @@ cache:
   pip: true
   apt: true
   
-# remember: results at https://travis-ci.org
+# remember: results at https://travis-ci.com - 
+# Used to be https://travis-ci.org. For migration details see
+# https://docs.travis-ci.com/user/migrate/legacy-services-to-github-apps-migration-guide
