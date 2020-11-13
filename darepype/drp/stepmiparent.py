@@ -73,7 +73,8 @@ class StepMIParent(StepParent):
 
     def runstart(self, data, arglist):
         """ Method to call at the beginning of the pipe step call.
-            Mostly refers to runstart of stepparent
+            Mostly refers to runstart of stepparent.
+            This method also stored file numbers in self.filenum
         """
         # Keep a list of input file numbers for output filename
         self.filenum = []
