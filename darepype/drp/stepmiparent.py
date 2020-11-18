@@ -69,7 +69,7 @@ class StepMIParent(StepParent):
         # Log the value of sample parameter
         self.log.debug("Sample Parameter = %.2f" % self.getarg('sampar'))
         # Return the first datain element
-        self.dataout = self.datain[0]
+        self.dataout = self.datain[0].copy()
 
     def runstart(self, data, arglist):
         """ Method to call at the beginning of the pipe step call.
