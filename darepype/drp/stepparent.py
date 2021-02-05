@@ -20,7 +20,7 @@ import time # time library
 import logging # logging object library
 import argparse # Argument parsing library
 from configobj import ConfigObj # configuration object
-from .dataparent import DataParent # data parent object
+from darepype.drp.dataparent import DataParent # data parent object
 
 class StepParent(object):
     """ HAWC Pipeline Step Parent Object

@@ -17,7 +17,10 @@
 
 import os # os library
 import socket # socket library
-import _thread # thread library
+try:
+    import _thread as thread # thread library python3
+except:
+    import thread # thread library python2
 import time # time libary
 import logging # logging object library
 from ..drp.stepparent import StepParent
@@ -55,7 +58,7 @@ class StepLogSocket(StepParent):
                     # Start listening
                     sock.listen(5)
                     # Start thread
-                    thread.start_new_thread(self.logsocketrun,(sock,))
+                    _thread.start_new_thread(self.logsocketrun,(sock,))
                     err = False
                     break
                 except Exception:

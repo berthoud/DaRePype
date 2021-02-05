@@ -10,8 +10,8 @@
 import os
 import re
 import logging # logging object library
-from .dataparent import DataParent # pipeline data object
-from .stepparent import StepParent # pipe step parent object
+from darepype.drp.dataparent import DataParent # pipeline data object
+from darepype.drp.stepparent import StepParent # pipe step parent object
 
 class StepMIParent(StepParent):
     """ Pipeline multiple data input parent object

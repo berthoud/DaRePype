@@ -13,7 +13,6 @@ import configobj # config object library
 import gc # garbage collect
 from astropy.io import fits # fits libary
 from .dataparent import DataParent # Pipe Data Parent
-#from __builtin__ import True # Not needed after python 2.X???
 
 class DataFits(DataParent):
     """ Pipeline Data FITS Object
