@@ -74,11 +74,10 @@ class StepParent(object):
             - help: A short description of the parameter.
         """
         ### Set Names
-        # Name of the pipeline reduction step
+        # Name of the pipeline reduction step (same case as config file)
         self.name='parent'
-        # Shortcut for pipeline reduction step and identifier for
-        # saved file names.
-        self.procname = 'unk'
+        # Identifier for saved file names.
+        self.procname = 'UNK'
         # Set Logger for this pipe step
         self.log = logging.getLogger('pipe.step.%s' % self.name)
         ### Set Parameter list

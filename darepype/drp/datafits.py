@@ -1266,7 +1266,7 @@ class DataFits(DataParent):
             else:
                 # make it a pyfits.Card then get value and comment
                 card = fits.Card()
-                card = card.fromstring(key.upper() + ' = ' + val)
+                card = card.fromstring(key.upper() + '= ' + val)
                 # Following code is unused because non-string values
                 #   don't get converted correctly. However the new code
                 #   may not work with all version of pyfits - tbd - nlc 2013

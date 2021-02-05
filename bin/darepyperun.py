@@ -104,7 +104,8 @@ for l in rundesc:
 print(rundict)
 # Look for pytonpath
 if 'pythonpath' in rundict:
-    sys.path.append(rundict['pythonpath'])
+    for pathname in rundict['pythonpath'].split():
+        sys.path.append(pathname)
 
 ### Pipeline imports
 from darepype.drp.pipeline import PipeLine

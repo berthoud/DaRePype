@@ -16,14 +16,11 @@
 import numpy # numpy library
 import os # os library
 import logging # logging library
-import time # time library
 import configobj # config object library
 import validate  # to check input config file is correct
 import six # python 2 and 3 compatibility library
 import re # regexp
-import gc # garbage collect
 #from __builtin__ import True # Not needed after python 2.X???
-from fileinput import filename
 
 class DataParent(object):
     """ HAWC Pipeline Data Object
