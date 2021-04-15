@@ -77,7 +77,7 @@ if __name__ == '__main__':
           --config=ConfigFilePathName.txt : name of the configuration file
           -t, --test : runs the functionality test i.e. pipestep.test()
           --loglevel=LEVEL : configures the logging output for a particular level
-          -h, --help : Returns a list of 
+          -h, --help : Returns a list of parameters
     """
     StepMyStep().execute()
 
