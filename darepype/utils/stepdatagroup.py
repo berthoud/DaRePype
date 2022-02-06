@@ -97,8 +97,8 @@ class StepDataGroup(StepMOParent):
                 for keyi in range(len(groupkeys)):
                     # Get key from group and new data - format if needed
                     key = groupkeys[keyi]
-                    dkey = data.getheadval(key)
-                    gkey = gdata.getheadval(key) 
+                    dkey = data.getheadval(key, 'allheaders')
+                    gkey = gdata.getheadval(key, 'allheaders') 
                     if groupkfmt != None:
                         dkey = groupkfmt[keyi] % dkey
                         gkey = groupkfmt[keyi] % gkey
@@ -120,7 +120,7 @@ class StepDataGroup(StepMOParent):
             group = datagroups[groupind]
             msg = "  Group %d len=%d" % (groupind, len(group) )
             for key in groupkeys:
-                msg += " %s = %s" % (key, group[0].getheadval(key))
+                msg += " %s = %s" % (key, group[0].getheadval(key,  'allheaders'))
             self.log.debug(msg)
         ### Reduce input files - collect output files
         self.dataout = []
