@@ -49,3 +49,6 @@
 # Parent step No Inputs configuration
 [parentni]
 
+# Header functions
+[header]
+    TESTVAL = 3

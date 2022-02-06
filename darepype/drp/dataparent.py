@@ -537,7 +537,7 @@ class DataParent(object):
                 self.header[key] = selfval
         self.log.debug('MergeHead: done')
 
-    def getheadval(self, key, errmsg=True):
+    def getheadval(self, key, dataname = '', errmsg=True):
         """ Get Header Value: Returns the value of the requested key from
             the header. If the key is present in the [Header] section
             of the configuration that value is returned instead, the following
@@ -550,6 +550,12 @@ class DataParent(object):
             If the key can not be found an KeyError is produced and a warning is
             issued (unless key is present in the [Header] section of the
             configuration).
+            
+            dataname: For data objects with multiple headers (e.g. fits files)
+                      this indicates which header to use. dataname = 'allheaders' 
+                      indicates looking at all headers (order depends on
+                      the type of child to DataParent). Default is dataname = ''
+                      indicating only the first (main) header is searched.
 
             errmsg: Flag indicating if a log error message should be
                     issued if the keyword is not found. This can be disabled
@@ -565,6 +571,8 @@ class DataParent(object):
             if val[:2] in ['?_', '? ', '?-']:
                 # if key is not in the header -> use key name under value instead
                 if not key in self.header:
+                    self.log.info('Getheadval: Using %s keyword for %s' %
+                                  (val[2:], key))
                     key = val[2:].upper()
                 val = None
             # Check if it's a Header replacement (but not T/F)

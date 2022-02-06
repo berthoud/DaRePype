@@ -1238,17 +1238,33 @@ class DataFits(DataParent):
     def getheadval(self, key, dataname = '', errmsg=True):
         """ Get Header Value: Returns the value of the requested key from
             the header. If the keyword is present in the [Header] section
-            of the configuration that value is returned instead. In case that
-            value from the configuration file is itself a header key, the value
-            stored under that key is returned. If the key can not be found an
-            KeyError is produced and a warning is issued.
+            of the configuration that value is returned instead, the following
+            entries are possible in the configuration file:
+              * KEY = VALUE * VALUE is returned, the system checks if value is an
+                              int or a float, else a string is returned.
+              * KEY = NEWKEY * The VALUE under header[NEWKEY] is returned.
+              * KEY = ?_ALTKEY * If the keyword KEY is present, header[KEY] is
+                                 returned, else header[ALTKEY] is returned.
+            If the key can not be found an KeyError is produced and a warning is
+            issued (unless key is present in the [Header] section of the
+            configuration).
+            
+            dataname: This indicates which header to use. dataname = 'allheaders' 
+                      indicates looking at all headers, firs image HDUs then table
+                      HDUs. The first value found is returned. Default is
+                      dataname = '' indicating only the first (primary) header is
+                      searched.
+
+            errmsg: Flag indicating if a log error message should be
+                    issued if the keyword is not found. This can be disabled
+                    (set it to False) if getheadval is used to probe a dataset.            
         """
         val = None
         inkey = key # retain key which was input in case key changes
         # Look in the config
         try:
             # get the value
-            val = self.config['header'][key.upper()]
+            val = self.config['header'][key.upper()] # this .upper() may not be needed
             # Check if it's optional header replacement i.e. starts with '?_'
             if val[:2] in ['?_', '? ', '?-']:
                 # if key is not in the header -> use key name under value instead
@@ -1290,17 +1306,29 @@ class DataFits(DataParent):
             #raise RuntimeError('Missing Pipe Configuration')
         # Look in the header
         if val is None:
-            # get the header from dataname
-            header = self.getheader(dataname)
-            # get value from header
-            try:
-                val = header[key]
-            except KeyError:
-                # if keyword is not found
-                msg='Missing %s keyword in header %s' % (key, dataname)
-                if errmsg:
-                    self.log.error('GetHeadVal: %s' % msg)
-                raise KeyError(msg)
+            if dataname == 'allheaders':
+                # Look for value in all headers
+                for hdr in self.imgheads+self.tabheads:
+                    if key in hdr:
+                        val = hdr[key]
+                        break
+                if val is None:
+                    msg = 'Missing %s keyword in all headers' % (key)
+                    if errmsg:
+                        self.log.error('GetHeadVal: %s' % msg)
+                    raise KeyError(msg)
+            else:
+                # get the header from dataname
+                header = self.getheader(dataname)
+                # get value from header
+                try:
+                    val = header[key]
+                except KeyError:
+                    # if keyword is not found
+                    msg='Missing %s keyword in header %s' % (key, dataname)
+                    if errmsg:
+                        self.log.error('GetHeadVal: %s' % msg)
+                    raise KeyError(msg)
         # if Value is a pyfits.core.Undefined i.e. no keyword
         if isinstance(val, fits.Undefined):
             msg = 'Missing value for key = %s - returning empty string' % key

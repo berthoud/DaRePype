@@ -5,10 +5,16 @@
 """
 
 import unittest
+# setup logging
 import logging
 logging.basicConfig(level=logging.DEBUG)
+# Get testdata_folder
 import os
-TESTDATA_FOLDER = os.path.join(os.path.dirname(__file__), 'testdata')
+testdir = os.path.dirname(__file__)
+TESTDATA_FOLDER = os.path.join(testdir, 'testdata')
+# Make sure new code version is in path
+import sys
+sys.path.insert(0,os.path.split(testdir)[0])
 
 class TestDataParent(unittest.TestCase):
     def test_init(self):
@@ -48,6 +54,47 @@ class TestDataFits(unittest.TestCase):
         df = dp.load(os.path.join(TESTDATA_FOLDER, 'testfit.fits'))
         self.assertIsInstance(df, DataFits)
         self.assertGreater(sum(df.image.shape), 0)
+        
+    def test_imageHDUs(self):
+        """ Test image, imageindex, imageget, imageset, imagedel
+        """
+        # Load test file
+        from darepype.drp import DataParent
+        dp = DataParent(config = os.path.join(TESTDATA_FOLDER, 'testconf.txt'))
+        df = dp.load(os.path.join(TESTDATA_FOLDER, 'testfit.fits'))
+        # Name the hdu
+        df.imgnames[0] = "FIRST IMAGE"
+        # Make copy first image to second hdu
+        df.imageset(df.image, "Second Image", df.header)
+        # Check imageindex for second image
+        self.assertEqual(1, df.imageindex("Second Image"), 'check imageindex on 2 images')
+        # Check imageget
+        self.assertEqual(df.image.sum(), df.imageget("Second Image").sum())
+        # Check imaagedel
+        df.imagedel('First Image')
+        self.assertEqual(3, len(df.imgdata)+len(df.imgnames)+len(df.imgheads))
+        self.assertEqual(0, df.imageindex("Second Image"), 'check imagedelete')
+    
+    def test_getheader(self):
+        """ Test header functions: Set and get header keywords
+        """
+        # Load test file
+        from darepype.drp import DataParent
+        dp = DataParent(config = os.path.join(TESTDATA_FOLDER, 'testconf.txt'))
+        df = dp.load(os.path.join(TESTDATA_FOLDER, 'testfit.fits'))        
+        # Name the hdu
+        df.imgnames[0] = "FIRST IMAGE"
+        # Make copy first image to second hdu
+        df.imageset(df.image, "Second Image", df.header)
+        # Get getting values
+        self.assertEqual(2,df.getheadval('NAXIS'), 'getheadval from header')
+        self.assertEqual(3,df.getheadval('TESTVAL'), 'getheadval from config[header]')
+        # Set value in each header
+        df.setheadval('AVALUE',10)
+        df.setheadval('BVALUE',20,None,'Second Image')
+        # Check values
+        self.assertEqual(10, df.getheadval('AVALUE'), 'check setheadval primary header')
+        self.assertEqual(20, df.getheadval('BVALUE', 'allheaders'), 'check setheadval second header')
         
 class TestDataText(unittest.TestCase):
     def test_init(self):
