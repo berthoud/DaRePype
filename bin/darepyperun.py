@@ -26,7 +26,7 @@
         inputfiles = 
         file1.fits
         file2.fits
-        file10*.fits # same with wildcards
+        file10*.fits # same with wildcards (glob style)
     Multipe pipeline configuration files and logfiles can be specified
     in the same manner as multiple input files are specified (but no
     "glob" style wildcards are allowed).
@@ -46,6 +46,7 @@
 ### Basic Imports
 import os 
 import sys
+import shutil
 import glob
 import logging
 import subprocess
@@ -195,7 +196,7 @@ for fname in filelist:
         newname = os.path.join(outputfolder,nameonly)
         # Copy the file
         if not os.path.exists(newname):
-            os.system('cp ' + fname + ' ' + outputfolder)
+            shutil.copyfile(fname,newname)
             # Unzip if needed
             if '.bz2' in fname[-4:]:
                 log.debug('Unzipping File ' + nameonly)

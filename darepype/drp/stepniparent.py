@@ -11,8 +11,8 @@
 
 import logging # logging object library
 from configobj import ConfigObj
-from .dataparent import DataParent #pipeline data object
-from .stepmoparent import StepMOParent # pipe step parent object
+from darepype.drp.dataparent import DataParent #pipeline data object
+from darepype.drp.stepmoparent import StepMOParent # pipe step parent object
 
 class StepNIParent(StepMOParent):
     """ Pipeline no data input and multiple data output parent object

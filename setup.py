@@ -29,6 +29,10 @@ setup(
 
 """ New Push to PIPY
 
+    Unit Tests
+      python -m unittest test_objects.py
+      python -m unittest test_piping.py
+      python -m unittest test_bin.py
     Updates
     - Make new tag and push to github.
     - Update version above
