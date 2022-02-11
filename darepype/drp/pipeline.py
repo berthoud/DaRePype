@@ -429,8 +429,7 @@ class PipeLine(object):
                             # try the step catch and handle error
                             try:
                                 data = self.steps[stepi](data)
-                            except (ValueError, RuntimeError, TypeError,
-                                    KeyError, IndexError, IOError) as error:
+                            except Exception as error:
                                 # list warning
                                 self.log.warn('Call: Step %s'  % self.stepnames[stepi]
                                     + ' for file %s' % data.filename + ' returned an error,'
