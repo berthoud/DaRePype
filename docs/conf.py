@@ -22,7 +22,7 @@ copyright = '2020, HAWC Team'
 author = 'HAWC Team'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.2'
+release = '0.1.5'
 
 # Set master doc (else it looks for contents.rst)
 master_doc = 'index'
@@ -50,7 +50,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'latest'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
