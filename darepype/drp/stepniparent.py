@@ -84,7 +84,7 @@ class StepNIParent(StepMOParent):
             - Gets configuration from input data and checks type
         """
         # Start Message
-        self.log.info('Start Reduction: Pipe Step %s' % self.name)
+        self.log.info('Start: Pipe Step %s' % self.name)
         # Set input arguments
         for k in arglist.keys():
             self.arglist[k.lower()] = arglist[k]

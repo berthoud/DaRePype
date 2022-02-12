@@ -16,6 +16,7 @@
       - remove parameter from callstart/end
 """
 
+import os # os libary
 import time # time library
 import logging # logging object library
 import argparse # Argument parsing library
@@ -117,7 +118,8 @@ class StepParent(object):
             - Gets configuration from input data and checks type
         """
         # Start Message
-        self.log.info('Start Reduction: Pipe Step %s' % self.name)
+        fname = os.path.split(data.filename)[1]
+        self.log.info('Start: Pipe Step %s on file %s' % (self.name, fname) )
         # Set input arguments
         for k in arglist.keys():
             self.arglist[k.lower()] = arglist[k]
@@ -146,7 +148,8 @@ class StepParent(object):
         self.updateheader(data)
         # clear input arguments
         self.arglist = {}
-        self.log.info('Finished Reduction: Pipe Step %s' % self.name)
+        fname = os.path.split(data.filename)[1]
+        self.log.info('Finished: Pipe Step %s on file %s' % (self.name, fname))
 
     def updateheader(self,data):
         """ Update the header for a single PipeData object

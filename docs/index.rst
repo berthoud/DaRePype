@@ -16,10 +16,6 @@ DarePype
    
    index
 
-************
-Introduction
-************
-
 DarePype is a framework to build data reduction pipelines. It helps organize and run pipeline parts as steps which can be run individually or as part of a larger pipeline. DarePype includes sample steps but other projects have steps which can be used. DarePype can be used by itself, as part of a batch job, interactively or to run individual pipeline steps. 
  
 *********************

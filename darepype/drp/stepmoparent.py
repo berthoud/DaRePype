@@ -7,6 +7,7 @@
     @author: berthoud
 '''
 
+import os # os library
 import logging # logging object library
 from darepype.drp.dataparent import DataParent # pipeline data object
 from darepype.drp.stepmiparent import StepMIParent # pipe step parent object
@@ -76,7 +77,8 @@ class StepMOParent(StepMIParent):
             self.updateheader(d)
         # clear input arguments
         self.arglist = {}
-        self.log.info('Finished Reduction: Pipe Step %s' % self.name)
+        fname = os.path.split(data[0].filename)[1]
+        self.log.info('Finished: Pipe Step %s on file %s' % (self.name, fname))
 
     def execfiles(self, inputfiles):
         """ Runs several files from execute simultaneously.
