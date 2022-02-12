@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'DaRePype'
-copyright = '2020, HAWC Team'
-author = 'HAWC Team'
+copyright = '2020, HAWC / SEO Teams'
+author = 'HAWC / SEO Teams'
 
 # The full version, including alpha/beta/rc tags
 release = '0.1.5'
