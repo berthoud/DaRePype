@@ -68,6 +68,8 @@ class StepDataGroup(StepMOParent):
         self.paramlist.append(['fileidkey','',
             'Header keyword to re-identify files to avoid re-reducing the same groups' +
             ' (default is '' indicating all data has to be re-reduced)'])
+        self.paramlist.append(['saveoutput',False,
+            'Flag to indicate if output from each data group should be saved to disk'])
 
     def run(self):
         """ Runs the data reduction algorithm. The self.datain is run
@@ -180,6 +182,13 @@ class StepDataGroup(StepMOParent):
                     groupoutputs.append(dataout)
                     idkeys = [dat.getheadval(fileidkey) for dat in group]
                     groupidkeys.append(idkeys)
+                # Save output if requested
+                if self.getarg('saveoutput'):
+                    if issubclass(dataout.__class__,DataParent):
+                        data.save()
+                    else:
+                        for data in dataout:
+                            data.save()
             else:
                 groupoutputs.append(self.groupoutputs[fit])
                 groupidkeys.append(self.groupidkeys[fit])
