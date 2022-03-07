@@ -72,10 +72,10 @@ class StepLoadAux(StepParent):
             'Filename for auxiliary file(s). Can contain * and ? ' +
             'wildcards to match multiple files to be selected using fitkeys ' +
             '(default = %sfolder/*.fits)' % auxpar])
-        self.paramlist.append(['bkup'+auxpar, 'bkup%sfolder/*.fits' % auxpar,
+        self.paramlist.append(['bkup'+auxpar, '',
             'Back up filename for auxiliary file(s). Can contain * and ? ' +
             'wildcards to match multiple files to be selected using fitkeys ' +
-            '(default = bkup%sfolder/*.fits)' % auxpar])
+            "(default = '' i.e. no backup folder)" % auxpar])
         self.paramlist.append([auxpar + 'fitkeys', [],
             'List of header keys that need to match auxiliary data file ' +
             '(default = []) - only used if multiple files ' +
@@ -115,15 +115,19 @@ class StepLoadAux(StepParent):
         ### Look for files - return in special cases
         # Glob the list of files
         auxlist = glob.glob(auxfile)
-        # Throw exception if no file found
+        # If no file found - look in backup folder
         if len(auxlist) < 1:
             self.log.warn('No files found under %s - looking in backup' % auxfile)
-            auxfile = os.path.expandvars(self.getarg('bkup'+auxpar))
-            auxlist = glob.glob(auxfile)
-            if len(auxlist) < 1:
-                msg = 'No %s files found under %s' % (auxpar, auxfile)
-                self.log.error(msg)
-                raise ValueError(msg)
+            auxback = os.path.expandvars(self.getarg('bkup'+auxpar))
+            if len(auxback):
+                auxfile = auxback
+                auxlist = glob.glob(auxfile)
+        # Throw exception if no file found
+        if len(auxlist) < 1:
+            msg = 'No %s files found under %s' % (auxpar, auxfile)
+            self.log.error(msg)
+            raise ValueError(msg)
+                
         # Get datain object (depends on step being SingleInput or MultiInput)
         if data == None:
             if issubclass(self.__class__, StepMIParent):

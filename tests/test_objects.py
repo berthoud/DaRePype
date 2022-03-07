@@ -12,9 +12,9 @@ logging.basicConfig(level=logging.DEBUG)
 import os
 testdir = os.path.dirname(__file__)
 TESTDATA_FOLDER = os.path.join(testdir, 'testdata')
-# Make sure new code version is in path
-import sys
-sys.path.insert(0,os.path.split(testdir)[0])
+# Make sure new code version is in path (can also do venv)
+#import sys
+#sys.path.insert(0,os.path.split(testdir)[0])
 
 class TestDataParent(unittest.TestCase):
     def test_init(self):

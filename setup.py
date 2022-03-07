@@ -29,7 +29,11 @@ setup(
 
 """ New Push to PIPY
 
-    Unit Tests
+    Unit Tests - in virtual environment
+      cd darepypevenv
+      source bin/activate
+      export PYTHONPATH = /Users/berthoud/instruments/software/darepype
+      cd ../darepype/tests
       python -m unittest test_objects.py
       python -m unittest test_piping.py
       python -m unittest test_bin.py
