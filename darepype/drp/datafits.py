@@ -1301,7 +1301,7 @@ class DataFits(DataParent):
         except TypeError :
             # if config is not yet loaded - return error
             self.log.warn('GetHeadVal: Missing Configuration')
-            # The following line is commented out such that pipedata can
+            # The following line is commented out such that datafits can
             #     still be used without configuration
             #raise RuntimeError('Missing Pipe Configuration')
         # Look in the header

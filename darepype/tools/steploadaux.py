@@ -140,9 +140,9 @@ class StepLoadAux(StepParent):
                 self.log.info('LoadAuxName: Found unique file = %s' % auxlist[0])
             else:
                 self.log.info('LoadAuxName: No fitkeys: Return first %sfile match = %s' %
-                              (self.auxpar, auxlist[0]) )
+                              (auxpar, auxlist[0]) )
             data.setheadval('HISTORY','%s: Best %sfile = %s' % 
-                            (self.name, self.auxpar, os.path.split(auxlist[0])[1],))
+                            (self.name, auxpar, os.path.split(auxlist[0])[1],))
             if multi:
                 return auxlist
             else:

@@ -542,10 +542,10 @@ class DataParent(object):
             the header. If the key is present in the [Header] section
             of the configuration that value is returned instead, the following
             entries are possible in the configuration file:
-              * KEY = VALUE * VALUE is returned, the system checks if value is an
+              * KEY = VALUE # VALUE is returned, the system checks if value is an
                               int or a float, else a string is returned.
-              * KEY = NEWKEY * The VALUE under header[NEWKEY] is returned.
-              * KEY = ?_ALTKEY * If the keyword KEY is present, header[KEY] is
+              * KEY = NEWKEY # The VALUE under header[NEWKEY] is returned.
+              * KEY = ?_ALTKEY # If the keyword KEY is present, header[KEY] is
                                  returned, else header[ALTKEY] is returned.
             If the key can not be found an KeyError is produced and a warning is
             issued (unless key is present in the [Header] section of the
@@ -559,7 +559,9 @@ class DataParent(object):
 
             errmsg: Flag indicating if a log error message should be
                     issued if the keyword is not found. This can be disabled
-                    (set it to False) if getheadval is used to probe a dataset.
+                    (set it to False) if getheadval is used to probe a header
+                    for a particular key, but the error is still raised.
+                    
         """
         val = None
         inkey = key # retain key which was input in case key changes
@@ -614,7 +616,7 @@ class DataParent(object):
         except TypeError :
             # if config is not yet loaded - return error
             self.log.warn('GetHeadVal: Missing Configuration')
-            # The following line is commented out such that pipedata can
+            # The following line is commented out such that dataparent can
             #     still be used without configuration
             #raise RuntimeError('Missing Pipe Configuration')
         # Look in the header
