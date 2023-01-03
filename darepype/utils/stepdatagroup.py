@@ -172,8 +172,9 @@ class StepDataGroup(StepMOParent):
                 try:
                     dataout = self.redstep(group)
                 except Exception as error:
-                    self.log.warn('Step %s failed for group %d on with file %s . . .' %
-                                  (self.getarg('redstepname'), groupi, group[0].filename) )
+                    self.log.warn('Step %s failed for group #%d with %d files %s . . .' %
+                                  (self.getarg('redstepname'), groupi, len(group), 
+                                   group[0].filename) )
                     self.log.warn('message = %s' % str(error) + ' - skipping group')
                     self.log.warn('traceback = %s' % traceback.format_exc())
                     continue
