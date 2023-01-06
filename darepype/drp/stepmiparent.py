@@ -80,20 +80,27 @@ class StepMIParent(StepParent):
         self.filenum = []
 
         # Check input data - should be a list/tuple with PipeData objects
-        if isinstance(data, (list,tuple)):
+        if isinstance(data, (list, tuple)):
             for d in data:
                 if not isinstance(d, DataParent):
-                    msg = 'Invalid input data type: Pipe Data object is required'
+                    msg = 'Invalid input data type: Pipe Data ' \
+                          'object is required'
                     self.log.error(msg)
-                    raise TypeError('Runstart: '+msg)
+                    raise TypeError('Runstart: ' + msg)
                 # try to read numerical file number from input name
-                try:
-                    # test if it is a valid number
-                    fnum = int(d.filenum)
-                    # append the string version if it is
-                    self.filenum.append(d.filenum)
-                except (ValueError, TypeError):
-                    pass
+                if '-' in str(d.filenum):
+                    # Split if it's a number range
+                    fn = str(d.filenum).split('-')
+                else:
+                    fn = [d.filenum]
+                for f in fn:
+                    try:
+                        # test if it is a valid number
+                        int(f)
+                        # append the string version if it is
+                        self.filenum.append(f)
+                    except (ValueError, TypeError):
+                        pass
         else:
             msg = 'Invalid input data type: List object is required'
             self.log.error(msg)
