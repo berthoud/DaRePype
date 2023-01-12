@@ -9,7 +9,7 @@ from setuptools import setup
 # This call to setup() does all the work
 setup(
     name="darepype",
-    version="0.1.5",
+    version="0.1.6",
     description="DAta REduction PYPEline framework",
     long_description = open("README.md",'rb').read().decode().strip(),
     long_description_content_type="text/markdown",
@@ -32,8 +32,8 @@ setup(
     Unit Tests - in virtual environment
       cd darepypevenv
       source bin/activate
-      export PYTHONPATH = /Users/berthoud/instruments/software/darepype
-      cd ../darepype/tests
+      export PYTHONPATH=/Users/berthoud/instruments/software/DarePype
+      cd ../DarePype/tests
       python -m unittest test_objects.py
       python -m unittest test_piping.py
       python -m unittest test_bin.py
