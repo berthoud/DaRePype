@@ -75,7 +75,7 @@ class StepLoadAux(StepParent):
         self.paramlist.append(['bkup'+auxpar, '',
             'Back up filename for auxiliary file(s). Can contain * and ? ' +
             'wildcards to match multiple files to be selected using fitkeys ' +
-            "(default = '' i.e. no backup folder)" % auxpar])
+            "(default = '' i.e. no backup folder)" ])
         self.paramlist.append([auxpar + 'fitkeys', [],
             'List of header keys that need to match auxiliary data file ' +
             '(default = []) - only used if multiple files ' +

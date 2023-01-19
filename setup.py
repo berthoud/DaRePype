@@ -21,6 +21,8 @@ setup(
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     packages=["darepype","darepype.drp","darepype.tools","darepype.utils"],
     include_package_data=True,
@@ -45,7 +47,7 @@ setup(
     CHECK IT:
         tar -tzf dist/*.tar.gz
         twine check dist/darepype-0.1.0.tar.gz
-        BTW: /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/twine
+        BTW: install twine with macports
     Upload it:
         twine upload dist/*
 
