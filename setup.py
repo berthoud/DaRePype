@@ -40,8 +40,9 @@ setup(
       python -m unittest test_piping.py
       python -m unittest test_bin.py
     Updates
-    - Make new tag (git tag 0.1.7) and push to github.
+    - Make new tag (git tag 0.1.7)
     - Update version above
+    - Push to github
     Run / Install with:
         python setup.py build sdist --format=gztar
     CHECK IT:
