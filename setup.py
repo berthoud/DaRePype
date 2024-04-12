@@ -9,7 +9,7 @@ from setuptools import setup
 # This call to setup() does all the work
 setup(
     name="darepype",
-    version="0.1.6",
+    version="0.1.7",
     description="DAta REduction PYPEline framework",
     long_description = open("README.md",'rb').read().decode().strip(),
     long_description_content_type="text/markdown",
@@ -40,7 +40,7 @@ setup(
       python -m unittest test_piping.py
       python -m unittest test_bin.py
     Updates
-    - Make new tag and push to github.
+    - Make new tag (git tag 0.1.7) and push to github.
     - Update version above
     Run / Install with:
         python setup.py build sdist --format=gztar
