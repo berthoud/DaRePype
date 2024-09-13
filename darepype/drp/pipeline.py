@@ -46,10 +46,10 @@ class PipeLine(object):
                         ### len(self.steps) > 0 indicates pipe is set up
         # Data Variables
         self.results = [] # list with results from each file for the most recent
-                            #     step (Can be pipedata objects or lists thereof)
+                          #     step (Can be pipedata objects or lists thereof)
         self.outputs = [] # list of most recent outputs for each step
         self.inputs = [] # list of input data, one element for each step
-                        # these are only used for Multiple Input steps
+                         # these are only used for Multiple Input steps
         self.finals = [] # list of the results from last few final steps
         # Files Variables
         self.openfiles = [] # file name list of non-reduced files (fifo)
@@ -195,6 +195,9 @@ class PipeLine(object):
                     self.steps.append(stepobj)
                     # add real stepnames from step.name, fill self.inputs
                     self.stepnames[stepi]=self.steps[stepi].name
+                    # Set pipeline in the step
+                    stepobj.pipeline = self
+                # fill self.inputs / outputs
                 self.inputs.append([])
                 self.outputs.append(None)
             retmsg=retmsg+' / Set up %s pipe steps' % steplist

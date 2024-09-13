@@ -55,6 +55,8 @@ class StepParent(object):
         # with multiple output PipeData objects (MIMO), or multiple input Pipefile
         # objects with a single output PipeData object (MISO).
         self.iomode = 'SISO'
+        # pipeline: will be set if the step is running in a pipeline
+        self.pipeline = None
         # do local setup
         self.setup()
         self.log.debug('Init: done')
