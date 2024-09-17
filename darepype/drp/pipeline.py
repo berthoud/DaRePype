@@ -25,7 +25,7 @@ class PipeLine(object):
     """
 
     def __init__(self, filenames=None, config=None, pipemode=None,
-                 runmode=None, savemem=False):
+                 runmode=None, savemem=True):
         """ Constructor: Initialize the pipeline
         """
         # Admin Variables
@@ -52,9 +52,12 @@ class PipeLine(object):
                          # these are only used for Multiple Input steps
         self.finals = [] # list of the results from last few final steps
         # Files Variables
-        self.openfiles = [] # file name list of non-reduced files (fifo)
-        self.reducedfiles = [] # file name list of reduced files
-        self.outfiles = [] # file name list of files saved to disk
+        self.openfiles = [] # file name list of non-reduced files (fifo). Files
+                            # are removed as soon as they start to be reduced.
+        self.infiles = [] # file name list of all files sent into the pipeline
+                          # files in openfiles are not yet in there
+        self.outfiles = [] # file name list of all files saved to disk. This
+                           # includes ANY saved file, intermediate and final data.
         # set up the pipeline
         self.setup(filenames=filenames, config=config, pipemode=pipemode,
                    runmode=runmode)
@@ -74,7 +77,7 @@ class PipeLine(object):
         self.stepnames=[]
         self.steps=[]
         self.openfiles=[]
-        self.reducedfiles=[]
+        self.infiles = []
         self.outfiles=[]
         # Reset Data
         self.results=[]
@@ -265,7 +268,7 @@ class PipeLine(object):
                                % stepname)
                 raise error
         # check if data is available
-        if len(self.reducedfiles) < 1:
+        if len(self.results) < 1:
             self.log.warning('GetResult: no results yet')
             return 0
         # get result
@@ -361,8 +364,8 @@ class PipeLine(object):
                     continue
             # Add file to results
             self.results.append(data)
-            # Add to reducedfiles
-            self.reducedfiles.append(filename)
+            # Add to infiles
+            self.infiles.append(filename)
         # Remove the files from openfiles
         self.openfiles = []
         ### Loop over steps:
@@ -397,8 +400,6 @@ class PipeLine(object):
                     if self.stepnames[stepi] == 'load':
                         # Load File
                         data.load()
-                        if not self.memFlag:
-                            self.outputs[stepi] = data
                     elif self.stepnames[stepi] == 'save':
                         # Save File
                         # Check to make sure pipemode is in history
@@ -411,16 +412,12 @@ class PipeLine(object):
                         # Save the file
                         data.save()
                         self.outfiles.append(data.filename)
-                        if not self.memFlag:
-                            self.outputs[stepi] = data
                     elif self.stepnames[stepi][:5] == 'load_':
                         # Load particular process result (has to be saved first)
                         procname = self.stepnames[stepi][5:].upper()
                         self.log.debug('Loading %s process result' % procname)
                         newfname = data.filenamebegin + procname + data.filenameend
                         data.load(newfname)
-                        if not self.memFlag:
-                            self.outputs[stepi] = data
                     # run step[stepi]
                     else:
                         self.log.debug('Call: Starting step %s on file %s' %
@@ -477,7 +474,7 @@ class PipeLine(object):
                 # If the step is an NI, set the correct config
                 if isinstance(self.steps[stepi], StepNIParent):
                     self.steps[stepi].config = self.config
-                # Run the next MI step with the inputs
+                # RUN the next MI step with the inputs
                 try:
                     data = self.steps[stepi](self.inputs[stepi])
                 # if there's an error. stop and return an error (no matter what)
@@ -501,15 +498,15 @@ class PipeLine(object):
                     self.results = data
                 else:
                     self.results = [data]
-                # If the step is an NI, update reducedfiles
+                # If the step is an NI, update infiles
                 if isinstance(self.steps[stepi], StepNIParent):
                     for dat in data:
                         inlist = False
-                        for fnam in self.reducedfiles:
+                        for fnam in self.infiles:
                             if dat.filenamebegin in fnam and dat.filenameend in fnam:
                                 inlist = True
                         if not inlist:
-                            self.reducedfiles.append(dat.filename)
+                            self.infiles.append(dat.filename)
                 # increase step index
                 stepi += 1
         # -- end loop over all steps
