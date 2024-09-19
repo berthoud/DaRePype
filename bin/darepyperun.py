@@ -106,7 +106,7 @@ print(rundict)
 # Look for pytonpath
 if 'pythonpath' in rundict:
     for pathname in rundict['pythonpath'].split():
-        sys.path.append(pathname)
+        sys.path.insert(0,pathname)
 
 ### Pipeline imports
 from darepype.drp.pipeline import PipeLine
