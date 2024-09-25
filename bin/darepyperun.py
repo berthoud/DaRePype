@@ -21,6 +21,8 @@
         logfile = logfile(s) filepathname
         singlefile = T/F if True each file is run through a separate pipeline
                      instead of running all the files through at once (F is default)
+        ignorebad = T/F if True files that fail to open are ignored
+                    else they raise an exception
         outputfolder = folder to write any results to (default is '.')
     The file can be specified in the following way
         inputfiles = 
@@ -161,6 +163,11 @@ singlefile = False
 if 'singlefile' in rundict:
     if rundict['singlefile'][0] in ['T','t']:
         singlefile = True
+# Get ignorebad
+ignorebad = False
+if 'ignorebad' in rundict:
+    if rundict['ignorebad'][0] in ['T','t']:
+        ignorebad = True
 
 ### Get input file list
 # Option 1: Filenames (treat each with glob)
@@ -178,11 +185,7 @@ if 'inputfiles' in rundict:
         filelist += fglob
         
 # Option 2: Folders (below inputfolder) and fileid
-
-# No Files: Issue error and retunt
-if len(filelist) < 1:
-    log.error('No input files')
-    raise ValueError('PipeRun: No input files')
+# Not implemented
 
 ### Copy Files and decompress if needed
 filein = []
@@ -209,10 +212,10 @@ for fname in filelist:
 if singlefile:
     for f in filein:
         pipe = PipeLine(config=pipeconf)
-        pipe(f, pipemode = pipemode, force=True)
+        pipe(f, pipemode = pipemode, force=True, ignorebad = ignorebad)
 else:
     pipe = PipeLine(config=pipeconf)
-    pipe(filein, pipemode = pipemode, force=True)
+    pipe(filein, pipemode = pipemode, force=True, ignorebad = ignorebad)
 
 ### Final message
 log.info('Finished piperun: %s' % os.path.split(args.prdfile[0])[1])

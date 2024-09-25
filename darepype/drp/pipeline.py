@@ -25,7 +25,7 @@ class PipeLine(object):
     """
 
     def __init__(self, filenames=None, config=None, pipemode=None,
-                 runmode=None, savemem=True):
+                 runmode=None, savemem=True, ignorebad = False):
         """ Constructor: Initialize the pipeline
         """
         # Admin Variables
@@ -37,6 +37,9 @@ class PipeLine(object):
         self.memFlag = savemem # set to True to conserve memory.  This will
                                 # not save outputs of each step, and alter
                                 # the behaviour of self.getresults()
+        self.ignorebad = ignorebad # flag to ignore files which are missing,
+                                    # have zero size or fail to read
+                                    # (but will send a warning)
         self.log = logging.getLogger('pipe.line')
         # Pipesteps Variables
         self.stepnames = [] # names of the pipeline steps (from step.name)
@@ -46,18 +49,18 @@ class PipeLine(object):
                         ### len(self.steps) > 0 indicates pipe is set up
         # Data Variables
         self.results = [] # list with results from each file for the most recent
-                          #     step (Can be pipedata objects or lists thereof)
+                            #     step (Can be pipedata objects or lists thereof)
         self.outputs = [] # list of most recent outputs for each step
         self.inputs = [] # list of input data, one element for each step
-                         # these are only used for Multiple Input steps
+                            # these are only used for Multiple Input steps
         self.finals = [] # list of the results from last few final steps
         # Files Variables
         self.openfiles = [] # file name list of non-reduced files (fifo). Files
                             # are removed as soon as they start to be reduced.
         self.infiles = [] # file name list of all files sent into the pipeline
-                          # files in openfiles are not yet in there
+                            # files in openfiles are not yet in there
         self.outfiles = [] # file name list of all files saved to disk. This
-                           # includes ANY saved file, intermediate and final data.
+                            # includes ANY saved file, intermediate and final data.
         # set up the pipeline
         self.setup(filenames=filenames, config=config, pipemode=pipemode,
                    runmode=runmode)
@@ -85,8 +88,8 @@ class PipeLine(object):
         # message
         self.log.debug('Cleared - Done')
 
-    def setup(self, filenames=None, config=None, pipemode=None,
-              runmode=None, errstop=None):
+    def setup(self, filenames = None, config = None, pipemode = None,
+              runmode = None, errstop = None, ignorebad = None):
         """ Using the information in the (first) file in 'filenames', this
             function sets up the pipeline. If pipemode is None, the header
             keywords in the file are used to determine pipemode.
@@ -97,15 +100,16 @@ class PipeLine(object):
             the pipe steps have been set they can only be changed by using the
             reset() command, followed by a new setup().
         """
-        ### set runmode
+        ### Set local variables
+        # set runmode
         if runmode ==  'auto' or runmode == 'inter':
             self.runmode=runmode
         elif runmode != None:
-            self.log.warn('Setup: Invalid Runmode (%s)' % runmode)
-        ### set configuration
+            self.log.warning('Setup: Invalid Runmode (%s)' % runmode)
+        # set configuration
         if config != None:
             self.config = DataParent().setconfig(config)
-        ### set errstop from input or from config
+        # set errstop from input or from config
         if errstop != None:
             self.errstop = errstop
         else:
@@ -113,6 +117,9 @@ class PipeLine(object):
                 self.errstop = int(self.config['general']['errorstop'] )
             except:
                 pass
+        # set ignorebad
+        if ignorebad is not None:
+            self.ignorebad = ignorebad
         ### get file header
         if filenames == None or len(filenames) == 0:
             # no file -> say it
@@ -133,13 +140,21 @@ class PipeLine(object):
             except IndexError as error:
                 self.log.error('Setup: no input files')
                 raise error
-            # if len(filenames[0]) > 1 it should be a filename (from a list)
-            if namelen > 1:
+            # if len(filenames[0]) == 1 it should be a filename (not a list of filenames)
+            if namelen == 1:
+                filenames = [ filenames, ]
+            # Find a valid file to open
+            headdata = None
+            while not headdata and len(filenames):
                 firstfile = filenames[0]
-            else:
-                firstfile = filenames
-            # load header
-            headdata = DataParent(config=self.config).loadhead(firstfile)
+                headdata = self.opencheck(firstfile)
+                if not headdata:
+                    del filenames[0]
+            # Raise error if no good file is found
+            if not headdata:
+                msg = f'Setup: no valid input files - aborting'
+                self.log.error(msg)
+                raise RuntimeError(msg)
             retmsg='Loaded file header'
         ### get pipeline mode
         # If available: from input parameter
@@ -206,6 +221,46 @@ class PipeLine(object):
             retmsg=retmsg+' / Set up %s pipe steps' % steplist
         self.log.debug('Setup: done - %s' % retmsg)
 
+    def opencheck(self,filename):
+        """ Checks a file then returns a PipeData object with loaded
+            header.
+        
+            If self.ignorebad is false an exception is raised when a
+            bad file is encountered. Otherwise None is returned. 
+        """
+        headdata = None
+        # see if file exists
+        if not os.path.isfile(filename):
+            msg = 'Setup: Non-existent input file: '+filename
+            if self.ignorebad:
+                self.log.warning(msg)
+                return None
+            else:
+                self.log.error(msg)
+                raise RuntimeError(msg)
+        # see if it's size is > 0
+        if not os.path.getsize(filename):
+            msg = 'Setup: Zero-size input file: '+filename
+            if self.ignorebad:
+                self.log.warning(msg)
+                return None
+            else:
+                self.log.error(msg)
+                raise RuntimeError(msg)
+        # try to read header
+        try:
+            headdata = DataParent(config=self.config).loadhead(filename)
+        except Exception as err:
+            msg = f'Setup: Failure opening input file {filename}: {type(err).__name__}: {err}'
+            if self.ignorebad:
+                self.log.warning(msg)
+                return None
+            else:
+                self.log.error(msg)
+                raise RuntimeError(msg)
+        # return result
+        return headdata
+    
     def getpipemode(self,data):
         """ Searches for an appropriate pipe mode in the config file, given
             the header values in the passed data. Tries to mach all key=value
@@ -300,13 +355,8 @@ class PipeLine(object):
             namelen = 2
         # make sure filenames is a valid list
         if namelen < 2: filenames=[filenames]
-        # add the files to the list (check if each file exists)
-        for filename in filenames:
-            if os.path.isfile(filename):
-                self.openfiles.append(filename)
-            else:
-                self.log.warn('Add: could not find file (%s) - ignored'
-                              % filename)
+        # add the files to the list (no check here, self.opencheck is used later)
+        self.openfiles.extend(filenames)
         self.log.debug('Add - Done')
 
     def save(self, filename=None, stepname='final'):
@@ -323,7 +373,7 @@ class PipeLine(object):
         self.log.debug('Save - Done')
 
     def __call__(self, filenames = None, config = None, pipemode = None,
-                 runmode = None, force=False):
+                 runmode = None, force = False, ignorebad = None):
         """ Runs the pipeline with the current files.
 
             Files with instmode/instcfg that do not match the pipeline's
@@ -335,9 +385,12 @@ class PipeLine(object):
         # Add files to file list
         if filenames != None:
             self.addfiles(filenames)
+        # Check ignorebad
+        if ignorebad is None:
+            ignorebad = self.ignorebad
         # Configure
         self.setup(filenames=self.openfiles, config=config, pipemode=pipemode,
-                   runmode=runmode)
+                   runmode=runmode, ignorebad = ignorebad)
         # check if steps are available
         if len(self.steps) == 0 :
             self.log.error('Call: pipeline is not set up - aborting')
@@ -347,23 +400,24 @@ class PipeLine(object):
         #   - check if it's a valid file (instmode)
         # Reset resuls
         self.results = []
-        # Loop through files in openfiles
+        # Add openfiles to results
         for filename in self.openfiles:
             # Load file header in new data object
-            data = DataParent(config=self.config).loadhead(filename)
+            headdata = self.opencheck(filename)
+            if not headdata:
+                continue
             fileshort = os.path.split(filename)[-1]
             self.log.info('Preparing file %s' % fileshort)
             # Check if instmode and instcfg match.  If not, skip file
-            filepipemode = self.getpipemode(data)
+            filepipemode = self.getpipemode(headdata)
             if self.pipemode != filepipemode:
                 if force is True:
-                    self.log.warning('Call: File %s does not fit PipeMode datakeys  - Will attempt to process' %filename)
+                    self.log.info('Call: File %s does not fit PipeMode datakeys  - Will attempt to process' %filename)
                 else:
                     self.log.warning('Call: File %s does not fit PipeMode datakeys - skipping' %filename)
-                    self.openfiles.remove(filename)
                     continue
             # Add file to results
-            self.results.append(data)
+            self.results.append(headdata)
             # Add to infiles
             self.infiles.append(filename)
         # Remove the files from openfiles
@@ -566,6 +620,8 @@ class PipeLine(object):
                             help='input files pathname',)
         parser.add_argument('-t','--test', action='store_true',
                             help='runs the selftest of the pipeline')
+        parser.add_argument('-i','--ignorebad', action='store_true',
+                            help='flag to ignore bad files (but will send a warning)')
         parser.add_argument('--loglevel', default='INFO', type=str,
                             choices=['DEBUG','INFO','WARN',
                                      'ERROR','CRITICAL'],
@@ -592,6 +648,10 @@ class PipeLine(object):
         if args.test:
             self.test()
             return
+        # Check ignorebad
+        ignorebad = self.ignorebad
+        if args.ignorebad:
+            ignorebad = True
         # Get pipemode
         pipemode = None
         force = False
@@ -603,7 +663,7 @@ class PipeLine(object):
         self.config = DataParent(config = config).config
         ### Reduce data
         if len(args.inputfiles) > -1:
-            self(args.inputfiles,pipemode=pipemode,force=force)
+            self(args.inputfiles,pipemode=pipemode,force=force,ignorebad=ignorebad)
             self.save()
         else:
             # Warning - no input file
